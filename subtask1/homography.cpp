@@ -4,18 +4,26 @@
 
 using namespace cv;
 using namespace std;
- 
-int main( int argc, char** argv)
+
+Mat image = imread("images/empty.jpg");
+
+int i = 0;
+vector<Point2f> pts_src;
+
+void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
 
-    Mat image = imread("images/traffic.jpg");
-
-    vector<Point2f> pts_src;
-    pts_src.push_back(Point2f(980, 213));
-    pts_src.push_back(Point2f(1261, 200));
-    pts_src.push_back(Point2f(1573, 1077));
-    pts_src.push_back(Point2f(92, 1080));
-
+    if  ( event == EVENT_LBUTTONDOWN || event == EVENT_RBUTTONDOWN ||  event == EVENT_MBUTTONDOWN ){
+        pts_src.push_back(Point2f(x, y));
+        i+=1;
+    }
+    else{
+        return;
+    }
+    
+    if (i != 4){
+        return;
+    }
     vector<Point2f> pts_dst;
     pts_dst.push_back(Point2f(472,52));
     pts_dst.push_back(Point2f(800,52));
@@ -27,9 +35,21 @@ int main( int argc, char** argv)
     Mat result;
 
     warpPerspective(image, result, h, image.size());
+    
+    imshow("Warped Image", result);
 
-    imshow("Source Image", image);
-    imshow("Warped Source Image", result);
- 
+    waitKey(0); 
+}
+
+
+int main( int argc, char** argv)
+{
+    namedWindow("COP290 - Subtask 1", 1);
+
+    setMouseCallback("COP290 - Subtask 1", CallBackFunc, NULL);
+
+    imshow("COP290 - Subtask 1", image);
+
     waitKey(0);
+    return 0;
 }
