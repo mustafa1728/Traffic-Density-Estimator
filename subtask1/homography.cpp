@@ -9,7 +9,6 @@ Mat image, grey_image, result;
 
 int i = 0;
 vector<Point2f> pts_src;
-bool f = false;
 
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
@@ -38,14 +37,16 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
     imshow("Warped Image", result);
 
-    f = true;
-
     waitKey(0);
 
     Mat final_image;
+
     Rect crop_region(720, 135, 360, 945);
+
     final_image = result(crop_region);
+
     imshow("cropped image ", final_image);
+
     waitKey(0);
 
 
