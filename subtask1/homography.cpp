@@ -9,6 +9,8 @@ Mat image, grey_image, result;
 
 int i = 0;
 vector<Point2f> pts_src;
+string warp_save_path("images/warp.jpg");
+string crop_save_path("images/crop.jpg");
 
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
@@ -37,6 +39,8 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
     imshow("Warped Image", result);
 
+    imwrite(warp_save_path, result);
+
     waitKey(0);
 
     Mat final_image;
@@ -47,13 +51,28 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
     imshow("cropped image ", final_image);
 
+    imwrite(crop_save_path, final_image);
+
 }
-
-
 
 int main(int argc, char** argv)
 {
-    image = imread("images/empty.jpg");
+    if (argc==1){
+        image = imread("images/traffic.jpg");
+    }
+    else if (argc==2){
+        image = imread(argv[1]);
+    }
+    else if (argc==4){
+        image = imread(argv[1]);
+        warp_save_path.assign(argv[2]);
+        crop_save_path.assign(argv[3]);
+    }
+    else{
+        cout<<"Incorrect Command. Please run the command in the following format:\n";
+        cout<<"./<filename>     or    ./<filename> <path_to_image>   or   ./<filename> <path_to_image> <warp_save_path> <crop_save_path>\n";
+        return 0;
+    }
 
     cvtColor(image, grey_image, COLOR_BGR2GRAY);
 
