@@ -47,9 +47,6 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
     imshow("cropped image ", final_image);
 
-    waitKey(0);
-
-
 }
 
 
@@ -67,9 +64,6 @@ int main(int argc, char** argv)
     imshow("COP290 - Subtask 1", grey_image);
 
     waitKey(0);
-
-    namedWindow("Wrapped Image", 1);
-
 
     return 0;
 }
