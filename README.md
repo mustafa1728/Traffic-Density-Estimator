@@ -1,7 +1,60 @@
-# COP290 task1
+#COP290 SUBTASK 1
 
-Use two images uploaded in sub_task1/images, for camera angle correction and cropping.
+####Mustafa Chasmai 2019CS10341  |  Tamajit banerjee 2019CS10408
 
-Links to tutorials: [tutorial1](https://docs.opencv.org/master/d9/dab/tutorial_homography.html) [tutorial2](https://learnopencv.com/homography-examples-using-opencv-python-c/).
+###Instructions for MakeFile
+~~~ 
+make compile 
+~~~
+This will compile the code and generate the executable file homography in the working directory
+~~~ 
+make run
+~~~
+This will execute the code and open a window named "COP290 - Subtask 1" which will contain the default traffic image.
 
-The course websit having relevant details is: [website](https://www.cse.iitd.ac.in/~rijurekha/cop290_2021.html)
+~~~ 
+make all
+~~~
+This will run both compile and run.
+
+~~~ 
+make clean
+~~~
+This will remove the executable file.
+
+###Instrctions for compiling from command line 
+
+    g++ homography.cpp -o homography -pthread -std=c++11 `pkg-config --cflags --libs opencv` 
+    OR
+    make compile
+    
+    
+###Instrctions for running executable from command line
+    
+~~~
+ ./homography
+ OR        
+ make run
+~~~    
+
+This will execute the code and open a window named "COP290 - Subtask 1" which will contain the default traffic image it will save the warped image by the default name "warp.jpg" and the cropped image by the default name "crop.jpg" in the same folder. 
+   
+~~~
+ ./homography image.jpg
+~~~
+
+This will execute the code and open a window named "COP290 - Subtask 1" which will contain the image specified by the path "image.jpg" and it will save the warped image by the default name "warp.jpg" and the cropped image by the default name "crop.jpg" in the same folder.
+  
+~~~
+ ./homography image.jpg warp_test.jpg crop_test.jpg  
+~~~
+
+This will execute the code and open a window named "COP290 - Subtask 1" which will contain the image specified by the path "image.jpg" and it will save the warped image by the name "warp_test.jpg" and the cropped image by the name "crop_test.jpg" in the same folder.
+
+Wrong command line arguments will print the appropriate help instructions.
+
+###Note
+
+We have tried to dynamically create the images sizes for the warped image and the cropped image based on the input image size.
+
+ 

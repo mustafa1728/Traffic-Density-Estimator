@@ -9,8 +9,8 @@ Mat image, grey_image, result;
 
 int i = 0;
 vector<Point2f> pts_src;
-string warp_save_path("images/warp.jpg");
-string crop_save_path("images/crop.jpg");
+string warp_save_path("warp.jpg");
+string crop_save_path("crop.jpg");
 
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 {
@@ -27,11 +27,21 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
         return;
     }
 
+    int height = grey_image.rows;
+    int width = grey_image.cols;
+
     vector<Point2f> pts_dst;
-    pts_dst.push_back(Point2f(720, 135));
-    pts_dst.push_back(Point2f(1080, 135));
-    pts_dst.push_back(Point2f(1080, 1080));
-    pts_dst.push_back(Point2f(720, 1080));
+    int x1, x2, y1, y2;
+
+    x1 = max(0, width / 2 - height / 6);
+    x2 = min(width, width / 2 + height / 6);
+    y1 = height / 2 - height / 3;
+    y2 = height / 2 + height / 3;
+
+    pts_dst.push_back(Point2f(x1, y1));
+    pts_dst.push_back(Point2f(x2, y1));
+    pts_dst.push_back(Point2f(x2, y2));
+    pts_dst.push_back(Point2f(x1, y2));
 
     Mat h = findHomography(pts_src, pts_dst);
 
@@ -45,7 +55,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
     Mat final_image;
 
-    Rect crop_region(720, 135, 360, 945);
+    Rect crop_region(x1, y1, x2 - x1, y2 - y1);
 
     final_image = result(crop_region);
 
@@ -57,20 +67,20 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
 int main(int argc, char** argv)
 {
-    if (argc==1){
+    if (argc == 1) {
         image = imread("images/traffic.jpg");
     }
-    else if (argc==2){
+    else if (argc == 2) {
         image = imread(argv[1]);
     }
-    else if (argc==4){
+    else if (argc == 4) {
         image = imread(argv[1]);
         warp_save_path.assign(argv[2]);
         crop_save_path.assign(argv[3]);
     }
-    else{
-        cout<<"Incorrect Command. Please run the command in the following format:\n";
-        cout<<"./<filename>     or    ./<filename> <path_to_image>   or   ./<filename> <path_to_image> <warp_save_path> <crop_save_path>\n";
+    else {
+        cout << "Incorrect Command. Please run the command in the following format:\n";
+        cout << "./<filename>     or    ./<filename> <path_to_image>   or   ./<filename> <path_to_image> <warp_save_path> <crop_save_path>\n";
         return 0;
     }
 
