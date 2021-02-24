@@ -1,8 +1,8 @@
-#COP290 SUBTASK 1
+# COP290 SUBTASK 1
 
-####Mustafa Chasmai 2019CS10341  |  Tamajit banerjee 2019CS10408
+#### Mustafa Chasmai 2019CS10341  |  Tamajit banerjee 2019CS10408
 
-###Instructions for MakeFile
+### Instructions for MakeFile
 ~~~ 
 make compile 
 ~~~
@@ -22,14 +22,14 @@ make clean
 ~~~
 This will remove the executable file.
 
-###Instrctions for compiling from command line 
+### Instrctions for compiling from command line 
 
     g++ homography.cpp -o homography -pthread -std=c++11 `pkg-config --cflags --libs opencv` 
     OR
     make compile
     
     
-###Instrctions for running executable from command line
+### Instrctions for running executable from command line
     
 ~~~
  ./homography
@@ -53,7 +53,7 @@ This will execute the code and open a window named "COP290 - Subtask 1" which wi
 
 Wrong command line arguments will print the appropriate help instructions.
 
-###Note
+### Note
 
 We have tried to dynamically create the images sizes for the warped image and the cropped image based on the input image size.
 
