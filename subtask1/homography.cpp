@@ -77,6 +77,7 @@ int main(int argc, char** argv)
         image = imread(argv[1]);
         warp_save_path.assign(argv[2]);
         crop_save_path.assign(argv[3]);
+
     }
     else {
         cout << "Incorrect Command. Please run the command in the following format:\n";
@@ -84,7 +85,27 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    cvtColor(image, grey_image, COLOR_BGR2GRAY);
+    try {
+        cvtColor(image, grey_image, COLOR_BGR2GRAY);
+    } catch(...) {
+        cout<<"Error: The image was not loaded properly. Please check its path.\n";
+        return 0;
+    }
+
+    try {
+        imwrite(warp_save_path, image);
+    } catch(...) {
+        cout<<"Error: The extension of warp file is not correct. Please use .jpg, .png, .tif or other valid formats.\n";
+        return 0;
+    }
+
+    try {
+        imwrite(crop_save_path, image);
+    } catch(...) {
+        cout<<"Error: The extension of crop file is not correct. Please use .jpg, .png, .tif or other valid formats.\n";
+        return 0;
+    }
+    
 
     namedWindow("COP290 - Subtask 1", 1);
 

@@ -24,29 +24,31 @@ This will remove the executable file.
 
 ### Instrctions for compiling from command line 
 
-    g++ homography.cpp -o homography -pthread -std=c++11 `pkg-config --cflags --libs opencv` 
-    OR
-    make compile
+~~~
+g++ homography.cpp -o homography -pthread -std=c++11 `pkg-config --cflags --libs opencv` 
+OR
+make compile
+~~~
     
     
 ### Instrctions for running executable from command line
     
 ~~~
- ./homography
- OR        
- make run
+./homography
+OR        
+make run
 ~~~    
 
 This will execute the code and open a window named "COP290 - Subtask 1" which will contain the default traffic image it will save the warped image by the default name "warp.jpg" and the cropped image by the default name "crop.jpg" in the same folder. 
    
 ~~~
- ./homography image.jpg
+./homography image.jpg
 ~~~
 
 This will execute the code and open a window named "COP290 - Subtask 1" which will contain the image specified by the path "image.jpg" and it will save the warped image by the default name "warp.jpg" and the cropped image by the default name "crop.jpg" in the same folder.
   
 ~~~
- ./homography image.jpg warp_test.jpg crop_test.jpg  
+./homography image.jpg warp_test.jpg crop_test.jpg  
 ~~~
 
 This will execute the code and open a window named "COP290 - Subtask 1" which will contain the image specified by the path "image.jpg" and it will save the warped image by the name "warp_test.jpg" and the cropped image by the name "crop_test.jpg" in the same folder.
