@@ -1,41 +1,62 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <fstream>
+#include <ctime>
 
 
 using namespace cv;
 using namespace std;
 
-Mat image, background_img;
 
-int i = 0;
-vector<Point2f> pts_src;
-int x_1, x_2, y_1, y_2;
 
-void CallBackFunc(int event, int x, int y, int flags, void* userdata)
+int main(int argc, char** argv)
 {
+    Mat image, background_img;
+    String videoPath, backimgPath = "/Users/tamajit/Desktop/COP290_task1/subtask2/screenshot.jpg";
 
-    if (event == EVENT_LBUTTONDOWN || event == EVENT_RBUTTONDOWN || event == EVENT_MBUTTONDOWN) {
-        pts_src.push_back(Point2f(x, y));
-        ++i;
-        // cout<<x<<<<y;
+    if (argc == 1) {
+        videoPath = "/Users/tamajit/trafficvideo.mp4";
     }
-    else {
-        return;
+    else if (argc==2){
+        videoPath = argv[1];
+    }
+    else if (argc==3){
+        videoPath = argv[1];
+        backimgPath = argv[2];
+    }
+    else{
+        cout << "Error: Incorrect Command. Please run the command in the following format:\n";
+        cout << "./<filename>     or    ./<filename> <path_to_video>\n";
+        return -1;
     }
 
-    if (i != 4) {
-        return;
+    VideoCapture cap(videoPath);
+    if (cap.isOpened() == false)
+    {
+        cout<<"Error: The video was not loaded properly. Please check its path.\n";
+        return -1;
+    }
+    
+    image = imread(backimgPath);
+    if(!image.data)
+    {
+        cout << "Error: The background image was not loaded properly. Please check its path.\n";
+        return -1;
     }
 
+    vector<Point2f> pts_src;
+    pts_src.push_back(Point2f(990, 207));
+    pts_src.push_back(Point2f(1280, 207));
+    pts_src.push_back(Point2f(1572, 1080));
+    pts_src.push_back(Point2f(260, 1080));
+
+    int x_1, x_2, y_1, y_2;
     int height = image.rows;
     int width = image.cols;
-
     x_1 = max(0, width / 2 - height / 6);
     x_2 = min(width, width / 2 + height / 6);
     y_1 = height / 2 - height / 3;
     y_2 = height / 2 + height / 3;
-
 
     vector<Point2f> pts_dst;
     pts_dst.push_back(Point2f(x_1, y_1));
@@ -44,143 +65,117 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     pts_dst.push_back(Point2f(x_1, y_2));
 
     Mat h = findHomography(pts_src, pts_dst);
-    Mat result;
-    warpPerspective(image, result, h, image.size());
 
+    Mat result_back;
+    warpPerspective(image, result_back, h, image.size());
     Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
+    background_img = result_back(crop_region);
 
-    background_img = result(crop_region);
-    // imshow("background", background_img);
-
-}
-
-int main(int argc, char** argv)
-{
-    int threshold = 40;
     int th_h = 10, th_s = 8, th_v = 35;
 
+    int frame_number= 0;
 
-    image = imread("screenshot.jpg");
-
-    namedWindow("COP290 - Task1 - Subtask 2", 1);
-
-    setMouseCallback("COP290 - Task1 - Subtask 2", CallBackFunc, NULL);
-
-    imshow("COP290 - Task1 - Subtask 2", image);
-
-    waitKey(0);
-
-    int count = 0;
-
-    VideoCapture cap("../../trafficvideo.mp4"); 
-    if (cap.isOpened() == false)  
-    {
-        cout << "Cannot open the video file" << endl;
-        cin.get();
-        return -1;
-    }
-
-    String window_name = "Angle corrected and cropped video";
-
-    namedWindow(window_name, WINDOW_NORMAL);
-
-    namedWindow("background subtracted", WINDOW_NORMAL);
+    time_t original_time = time(0);
+    long curr_time = 0, time_count = 0;
+    float avg_density = 0, avg_dynamic_density = 0;
 
     ofstream MyFile("out.txt");
-    int i = 0;
-    while (true)
+    
+    char buf[256];
+    char pattern[]  = "%15s %15s %15s";
+    sprintf(buf, pattern, "Frame Number", "Queue Density", "Dynamic Density");
+    cout << buf << endl;
+
+
+    Mat frame, result, final_image, foreground;
+    Mat final_image_hsv, background_img_hsv, foreground_hsv, mask, dynamicMask;
+    Mat prev_image, prev_homography, prev_result, prev_result_hsv;
+
+
+    const int number_of_frames_skip = 5;
+
+    Mat prev[number_of_frames_skip];
+
+    Mat concatenated;
+
+    String window_name = "Original Cropped video, background removal and Dynamic Density mask";
+    namedWindow(window_name, WINDOW_NORMAL);
+
+    while(true)
     {
+        Mat frame_temp;
+        bool bSuccess = cap.read(frame_temp);
+        frame = frame_temp;
 
-        Mat frame;
-        
-        bool bSuccess = cap.read(frame); 
-
-        if (bSuccess == false) 
+        if (bSuccess == false)
         {
-            cout << "Found the end of the video" << endl;
+            cout << "The video is over!" << endl;
             break;
         }
-        
-        
-        i+=1;
-        if(i%10<9){
-            continue;
+
+
+        warpPerspective(frame, result, h, frame.size());
+        Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
+        final_image = result(crop_region);
+
+        if(frame_number == 0){
+            prev_image = frame;
+        }
+        if(frame_number >= number_of_frames_skip){
+            prev_image = prev[frame_number % number_of_frames_skip];
         }
 
-
-        // while(i!=4){
-        //     image = frame;
-        //     namedWindow("Chose the four points", 1);
-        //     setMouseCallback("Chose the four points", CallBackFunc, NULL);
-        //     imshow("Chose the four points", image);
-        //     waitKey(0);
-        // }
-
-        vector<Point2f> pts_dst;
-        pts_dst.push_back(Point2f(x_1, y_1));
-        pts_dst.push_back(Point2f(x_2, y_1));
-        pts_dst.push_back(Point2f(x_2, y_2));
-        pts_dst.push_back(Point2f(x_1, y_2));
-
-        Mat h = findHomography(pts_src, pts_dst);
-        Mat result;
-        warpPerspective(frame, result, h, frame.size());
-
-        Mat final_image, foreground;
-
-        Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
-
-        final_image = result(crop_region);
-        // count+=1;
-        // if (count == 1){
-        //     background_img = final_image;
-        // }
-
-        // foreground = final_image - background_img;
-        Mat final_image_hsv, background_img_hsv, foreground_hsv;
-
-        cvtColor(final_image, final_image_hsv, COLOR_BGR2HSV);
-        cvtColor(background_img, background_img_hsv, COLOR_BGR2HSV);
-
-        absdiff(final_image_hsv, background_img_hsv, foreground_hsv);
-
+        // pBackSub->apply(final_image, dynamicMask);
+        warpPerspective(prev_image, prev_homography, h, prev_image.size());
+        prev_result = prev_homography(crop_region);
+        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);
+        absdiff(final_image_hsv, prev_result_hsv, foreground_hsv);
+        inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), dynamicMask);
         
+        dilate(dynamicMask, dynamicMask, Mat(), Point(-1, -1), 2, 1, 1);
 
-        inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), foreground_hsv);
-
-        Mat mask = foreground_hsv;
-        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);
-        imshow("mask", mask);
-
-        // cout<<"starting";
-        float density = 0;
-        for (int i = 0; i < mask.rows; ++i) {
-            for (int j = 0; j < mask.cols; ++j) {
-     
-                // Add the element
-                // cout<<mask.at<int>(i,j);
-                if(mask.at<int>(i,j)!=0){
-                    density = density + 1;
-                    // density = density + mask.at<int>(i,j);
+        float dynamic_density = 0;
+        for (int i = 0; i < dynamicMask.rows; ++i) {
+            for (int j = 0; j < dynamicMask.cols; ++j) {
+                if(dynamicMask.at<int>(i,j)!=0){
+                    dynamic_density = dynamic_density + 1;
                 }
-            // cout<<'\n'; 
-                
             }
         }
-
-        density = density / (mask.rows * mask.cols);
-        // cout<<density<<'\n';
-        MyFile << density<<'\n';
-
-        // foreground = final_image * foreground;
-        final_image_hsv.copyTo(foreground_hsv, foreground_hsv);
-
-        cvtColor(foreground_hsv, foreground, COLOR_HSV2BGR);
+        dynamic_density = dynamic_density / (dynamicMask.rows * dynamicMask.cols);
         
-        imshow(window_name, final_image);
-        imshow("background subtracted", foreground);
-        // imshow("Original video", frame);
+        prev[frame_number % number_of_frames_skip] = frame;
+
+        dynamic_density = min(dynamic_density, density);
+
+        time_t now = time(0);
+        if(now - original_time == curr_time){
+            avg_density+=density;
+            avg_dynamic_density+= dynamic_density;
+            time_count += 1;
+        }
+        else{
+            curr_time = now - original_time;
+            MyFile << now - original_time<<", ";
+            MyFile << avg_density / time_count<<", ";
+            MyFile << avg_dynamic_density / time_count<<'\n';
+            avg_density=0;
+            avg_dynamic_density = 0;
+            time_count = 0;
+        }
+        cvtColor(dynamicMask, dynamicMask, COLOR_GRAY2BGR);
+
+        Mat matArray[] = { final_image, mask, dynamicMask,};
+        hconcat( matArray, 3, concatenated );
+        imshow(window_name, concatenated);
+        frame_number+=1;
+
+        char buf[256];
+        char pattern[]  = "%15i %15f %15f";
+        sprintf(buf, pattern, frame_number, density, dynamic_density);
+        cout<<buf<<'\n';
         
+
         if (waitKey(10) == 27)
         {
             break;
@@ -188,5 +183,8 @@ int main(int argc, char** argv)
     }
 
     MyFile.close();
+
     return 0;
 }
+
+
