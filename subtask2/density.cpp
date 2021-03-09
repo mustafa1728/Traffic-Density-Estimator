@@ -12,10 +12,13 @@ using namespace std;
 int main(int argc, char** argv)
 {
     Mat image, background_img;
-    String videoPath, backimgPath = "/Users/tamajit/Desktop/COP290_task1/subtask2/screenshot.jpg";
+    String videoPath, backimgPath = "screenshot.jpg";
 
+
+
+    /// Command line arguments and help instructions ///
     if (argc == 1) {
-        videoPath = "/Users/tamajit/trafficvideo.mp4";
+        videoPath = "../../trafficvideo.mp4";
     }
     else if (argc==2){
         videoPath = argv[1];
@@ -30,8 +33,10 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    VideoCapture cap(videoPath);
-    if (cap.isOpened() == false)
+    /// Reading the video and background image ///
+
+    VideoCapture cap(videoPath); 
+    if (cap.isOpened() == false)  
     {
         cout<<"Error: The video was not loaded properly. Please check its path.\n";
         return -1;
@@ -43,6 +48,12 @@ int main(int argc, char** argv)
         cout << "Error: The background image was not loaded properly. Please check its path.\n";
         return -1;
     }
+
+
+
+
+
+    /// Some values needed for homography and cropping ///
 
     vector<Point2f> pts_src;
     pts_src.push_back(Point2f(990, 207));
@@ -71,13 +82,20 @@ int main(int argc, char** argv)
     Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
     background_img = result_back(crop_region);
 
+
+
+
+    
+
+
+    /// Initialisations and declarations ///
+
     int th_h = 10, th_s = 8, th_v = 35;
 
     int frame_number= 0;
 
     time_t original_time = time(0);
-    long curr_time = 0, time_count = 0;
-    float avg_density = 0, avg_dynamic_density = 0;
+    long long int curr_time = 0, time_count = 0;
 
     ofstream MyFile("out.txt");
     
@@ -92,11 +110,15 @@ int main(int argc, char** argv)
     Mat prev_image, prev_homography, prev_result, prev_result_hsv;
 
 
-    const int number_of_frames_skip = 5;
+    const int number_of_frames_skip = 10;
 
     Mat prev[number_of_frames_skip];
 
     Mat concatenated;
+
+
+    // Ptr<BackgroundSubtractor> pBackSub;
+    // pBackSub = createBackgroundSubtractorKNN(1, 400.0, false);
 
     String window_name = "Original Cropped video, background removal and Dynamic Density mask";
     namedWindow(window_name, WINDOW_NORMAL);
@@ -107,7 +129,7 @@ int main(int argc, char** argv)
         bool bSuccess = cap.read(frame_temp);
         frame = frame_temp;
 
-        if (bSuccess == false)
+        if (bSuccess == false) 
         {
             cout << "The video is over!" << endl;
             break;
@@ -117,6 +139,40 @@ int main(int argc, char** argv)
         warpPerspective(frame, result, h, frame.size());
         Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
         final_image = result(crop_region);
+
+
+
+
+
+        /// Calculating Queue density ///
+
+        cvtColor(final_image, final_image_hsv, COLOR_BGR2HSV);
+        cvtColor(background_img, background_img_hsv, COLOR_BGR2HSV);
+        absdiff(final_image_hsv, background_img_hsv, foreground_hsv);
+        inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), mask);
+
+        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);
+        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);        
+
+        float density = 0;
+        for (int i = 0; i < mask.rows; ++i) {
+            for (int j = 0; j < mask.cols; ++j) {
+    
+                if(mask.at<int>(i,j)!=0){
+                    density = density + 1;
+                }
+                
+            }
+        }
+
+        density = density / (mask.rows * mask.cols);
+        final_image.copyTo(mask, mask);
+
+
+
+
+
+        /// Calculating Dynamic density ///
 
         if(frame_number == 0){
             prev_image = frame;
@@ -128,7 +184,7 @@ int main(int argc, char** argv)
         // pBackSub->apply(final_image, dynamicMask);
         warpPerspective(prev_image, prev_homography, h, prev_image.size());
         prev_result = prev_homography(crop_region);
-        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);
+        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);       
         absdiff(final_image_hsv, prev_result_hsv, foreground_hsv);
         inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), dynamicMask);
         
@@ -146,29 +202,36 @@ int main(int argc, char** argv)
         
         prev[frame_number % number_of_frames_skip] = frame;
 
-        dynamic_density = min(dynamic_density, density);
 
-        time_t now = time(0);
-        if(now - original_time == curr_time){
-            avg_density+=density;
-            avg_dynamic_density+= dynamic_density;
-            time_count += 1;
-        }
-        else{
-            curr_time = now - original_time;
-            MyFile << now - original_time<<", ";
-            MyFile << avg_density / time_count<<", ";
-            MyFile << avg_dynamic_density / time_count<<'\n';
-            avg_density=0;
-            avg_dynamic_density = 0;
-            time_count = 0;
-        }
+
+
+        /// Displaying intermediate steps ///
+
         cvtColor(dynamicMask, dynamicMask, COLOR_GRAY2BGR);
 
         Mat matArray[] = { final_image, mask, dynamicMask,};
         hconcat( matArray, 3, concatenated );
         imshow(window_name, concatenated);
+
+        // imshow("Original video cropped", final_image);
+        // imshow("Background masked video", mask);
+        // imshow("Dynamic Density mask", dynamicMask);
+
+
+
+
+        /// incrementing counter ///
+
         frame_number+=1;
+
+        /// writing to file ///
+        dynamic_density = min(dynamic_density, density);
+
+        MyFile << frame_number<<", ";
+        MyFile << density <<", ";
+        MyFile << dynamic_density<<'\n';
+
+        /// Printing in console ///
 
         char buf[256];
         char pattern[]  = "%15i %15f %15f";
@@ -186,5 +249,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
-
