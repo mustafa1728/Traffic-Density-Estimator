@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
     Mat image, background_img;
-    String videoPath, backimgPath = "screenshot.jpg";
+    String videoPath, backimgPath = "background.jpg";
 
 
 
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     /// Some parameters that can be tuned ///
 
     int th_h = 10, th_s = 8, th_v = 35;
-    const int number_of_frames_skip = 10;
+    const int number_of_frames_skip = 8;
     const int number_of_frames_avg = 10;
 
     /// Initialisations and declarations ///
@@ -206,6 +206,35 @@ int main(int argc, char** argv)
         dynamic_density = dynamic_density / (dynamicMask.rows * dynamicMask.cols);
         
         prev[frame_number % number_of_frames_skip] = frame;
+
+
+
+
+        /// Using Optical Flow ///
+//         Mat flow(prev_image.size(), CV_32FC2);
+//         method(mask_prev,mask_next, flow, std::forward<Args>(args)...);
+
+        /// Visualization part///
+//         Mat flow_parts[2];
+//         split(flow, flow_parts);
+
+        /// Convert the algorithm's output into Polar coordinates
+//         Mat magnitude, angle, magn_norm;
+//         cartToPolar(flow_parts[0], flow_parts[1], magnitude, angle, true);
+//         normalize(magnitude, magn_norm, 0.0f, 1.0f, NORM_MINMAX);
+//         angle *= ((1.f / 360.f) * (180.f / 255.f));
+
+        /// Build hsv image
+//         Mat _hsv[3], hsv, hsv8, bgr;
+//         _hsv[0] = angle;
+//         _hsv[1] = Mat::ones(angle.size(), CV_32F);
+//         _hsv[2] = magn_norm;
+//         merge(_hsv, 3, hsv);
+//         hsv.convertTo(hsv8, CV_8U, 255.0);
+        
+        /// Display the results
+//         cvtColor(hsv8, bgr, COLOR_HSV2BGR);
+//         prvs = next;
 
 
 
