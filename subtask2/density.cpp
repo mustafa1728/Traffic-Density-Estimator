@@ -85,12 +85,14 @@ int main(int argc, char** argv)
 
 
 
-    
+    /// Some parameters that can be tuned ///
 
+    int th_h = 10, th_s = 8, th_v = 35;
+    const int number_of_frames_skip = 10;
+    const int number_of_frames_avg = 10;
 
     /// Initialisations and declarations ///
 
-    int th_h = 10, th_s = 8, th_v = 35;
 
     int frame_number= 0;
 
@@ -104,19 +106,22 @@ int main(int argc, char** argv)
     sprintf(buf, pattern, "Frame Number", "Queue Density", "Dynamic Density");
     cout << buf << endl;
 
+    MyFile <<"Frame Number, Queue Density, Dynamic Density"<<'\n';
 
     Mat frame, result, final_image, foreground;
     Mat final_image_hsv, background_img_hsv, foreground_hsv, mask, dynamicMask;
+
     Mat prev_image, prev_homography, prev_result, prev_result_hsv;
-
-
-    const int number_of_frames_skip = 10;
-
     Mat prev[number_of_frames_skip];
-
     Mat concatenated;
 
 
+    float density_prev[number_of_frames_avg];
+    float dynamic_prev[number_of_frames_avg];
+    for( int i = 0; i<number_of_frames_avg; i++){
+        density_prev[i] = 0;
+        dynamic_prev[i] = 0;
+    }
     // Ptr<BackgroundSubtractor> pBackSub;
     // pBackSub = createBackgroundSubtractorKNN(1, 400.0, false);
 
@@ -224,18 +229,30 @@ int main(int argc, char** argv)
 
         frame_number+=1;
 
+        /// getting average of some previous frames ///
+
+        density_prev[frame_number % number_of_frames_avg] = density;
+        dynamic_prev[frame_number % number_of_frames_avg] = dynamic_density;
+        float avg_density = 0, avg_dynamic_density = 0;
+        for( int i = 0; i<number_of_frames_avg; i++){
+            avg_density += density_prev[i];
+            avg_dynamic_density += dynamic_prev[i];
+        }
+        avg_density = avg_density / number_of_frames_avg;
+        avg_dynamic_density = avg_dynamic_density / number_of_frames_avg;
+
         /// writing to file ///
-        dynamic_density = min(dynamic_density, density);
+        avg_dynamic_density = min(avg_dynamic_density, avg_density);
 
         MyFile << frame_number<<", ";
-        MyFile << density <<", ";
-        MyFile << dynamic_density<<'\n';
+        MyFile << avg_density <<", ";
+        MyFile << avg_dynamic_density<<'\n';
 
         /// Printing in console ///
 
         char buf[256];
         char pattern[]  = "%15i %15f %15f";
-        sprintf(buf, pattern, frame_number, density, dynamic_density);
+        sprintf(buf, pattern, frame_number, avg_density, avg_dynamic_density);
         cout<<buf<<'\n';
         
 
