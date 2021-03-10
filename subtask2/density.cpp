@@ -7,12 +7,24 @@
 using namespace cv;
 using namespace std;
 
+vector<Point2f> pts_src;
 
+void CallBackFunc(int event, int x, int y, int flags, void* userdata)
+{
+
+    if (event == EVENT_LBUTTONDOWN || event == EVENT_RBUTTONDOWN || event == EVENT_MBUTTONDOWN) {
+        pts_src.push_back(Point2f(x, y));
+    }
+    else {
+        return;
+    }
+}
 
 int main(int argc, char** argv)
 {
     Mat image, background_img;
     String videoPath, backimgPath = "background.jpg";
+    String userinput = "0";
 
 
 
@@ -27,16 +39,24 @@ int main(int argc, char** argv)
         videoPath = argv[1];
         backimgPath = argv[2];
     }
+    else if (argc==4){
+        videoPath = argv[1];
+        backimgPath = argv[2];
+        userinput = argv[3];
+    }
     else{
         cout << "Error: Incorrect Command. Please run the command in the following format:\n";
-        cout << "./<filename>     or    ./<filename> <path_to_video>\n";
+        cout << "./<filename> or \n";
+        cout<<"./<filename> <path to video> or \n";
+        cout<<"./<filename> <path to video> <path to back image> or \n";
+        cout<<"./<filename> <path to video> <path to back image> <to take user input (0: no, 1: yes)>\n";
         return -1;
     }
 
     /// Reading the video and background image ///
 
-    VideoCapture cap(videoPath); 
-    if (cap.isOpened() == false)  
+    VideoCapture cap(videoPath);
+    if (cap.isOpened() == false)
     {
         cout<<"Error: The video was not loaded properly. Please check its path.\n";
         return -1;
@@ -55,11 +75,20 @@ int main(int argc, char** argv)
 
     /// Some values needed for homography and cropping ///
 
-    vector<Point2f> pts_src;
-    pts_src.push_back(Point2f(990, 207));
-    pts_src.push_back(Point2f(1280, 207));
-    pts_src.push_back(Point2f(1572, 1080));
-    pts_src.push_back(Point2f(260, 1080));
+    if(userinput.compare("1") == 0){
+        String user_input_window_name = "Chose 4 points to crop. (order: top left, top right, bottom right, bottom left)";
+        namedWindow(user_input_window_name, WINDOW_NORMAL);
+        setMouseCallback(user_input_window_name, CallBackFunc, NULL);
+        imshow(user_input_window_name, image);
+        waitKey(0);
+        destroyWindow(user_input_window_name);
+    }
+    else{
+        pts_src.push_back(Point2f(990, 207));
+        pts_src.push_back(Point2f(1280, 207));
+        pts_src.push_back(Point2f(1572, 1080));
+        pts_src.push_back(Point2f(260, 1080));
+    }
 
     int x_1, x_2, y_1, y_2;
     int height = image.rows;
@@ -134,7 +163,7 @@ int main(int argc, char** argv)
         bool bSuccess = cap.read(frame_temp);
         frame = frame_temp;
 
-        if (bSuccess == false) 
+        if (bSuccess == false)
         {
             cout << "The video is over!" << endl;
             break;
@@ -144,6 +173,7 @@ int main(int argc, char** argv)
         warpPerspective(frame, result, h, frame.size());
         Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
         final_image = result(crop_region);
+        cvtColor(final_image, final_image_hsv, COLOR_BGR2HSV);
 
 
 
@@ -151,13 +181,12 @@ int main(int argc, char** argv)
 
         /// Calculating Queue density ///
 
-        cvtColor(final_image, final_image_hsv, COLOR_BGR2HSV);
         cvtColor(background_img, background_img_hsv, COLOR_BGR2HSV);
         absdiff(final_image_hsv, background_img_hsv, foreground_hsv);
         inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), mask);
 
         dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);
-        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);        
+        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);
 
         float density = 0;
         for (int i = 0; i < mask.rows; ++i) {
@@ -189,7 +218,7 @@ int main(int argc, char** argv)
         // pBackSub->apply(final_image, dynamicMask);
         warpPerspective(prev_image, prev_homography, h, prev_image.size());
         prev_result = prev_homography(crop_region);
-        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);       
+        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);
         absdiff(final_image_hsv, prev_result_hsv, foreground_hsv);
         inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), dynamicMask);
         
@@ -295,3 +324,4 @@ int main(int argc, char** argv)
 
     return 0;
 }
+
