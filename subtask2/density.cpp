@@ -55,8 +55,8 @@ int main(int argc, char** argv)
 
     /// Reading the video and background image ///
 
-    VideoCapture cap(videoPath);
-    if (cap.isOpened() == false)
+    VideoCapture cap(videoPath); 
+    if (cap.isOpened() == false)  
     {
         cout<<"Error: The video was not loaded properly. Please check its path.\n";
         return -1;
@@ -88,7 +88,7 @@ int main(int argc, char** argv)
         pts_src.push_back(Point2f(1280, 207));
         pts_src.push_back(Point2f(1572, 1080));
         pts_src.push_back(Point2f(260, 1080));
-    }
+    }    
 
     int x_1, x_2, y_1, y_2;
     int height = image.rows;
@@ -119,6 +119,7 @@ int main(int argc, char** argv)
     int th_h = 10, th_s = 8, th_v = 35;
     const int number_of_frames_skip = 8;
     const int number_of_frames_avg = 10;
+    int speed_multiplier = 5;
 
     /// Initialisations and declarations ///
 
@@ -160,10 +161,15 @@ int main(int argc, char** argv)
     while(true)
     {
         Mat frame_temp;
-        bool bSuccess = cap.read(frame_temp);
+        bool bSuccess;
+        for (int i = 0; i<speed_multiplier; i++){
+             bSuccess = cap.grab();
+        }
+        bSuccess = cap.retrieve(frame_temp);
+
         frame = frame_temp;
 
-        if (bSuccess == false)
+        if (bSuccess == false) 
         {
             cout << "The video is over!" << endl;
             break;
@@ -186,7 +192,7 @@ int main(int argc, char** argv)
         inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), mask);
 
         dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);
-        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);
+        dilate(mask, mask, Mat(), Point(-1, -1), 2, 1, 1);        
 
         float density = 0;
         for (int i = 0; i < mask.rows; ++i) {
@@ -218,7 +224,7 @@ int main(int argc, char** argv)
         // pBackSub->apply(final_image, dynamicMask);
         warpPerspective(prev_image, prev_homography, h, prev_image.size());
         prev_result = prev_homography(crop_region);
-        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);
+        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);       
         absdiff(final_image_hsv, prev_result_hsv, foreground_hsv);
         inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), dynamicMask);
         
@@ -324,4 +330,3 @@ int main(int argc, char** argv)
 
     return 0;
 }
-

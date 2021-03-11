@@ -65,7 +65,9 @@ Error: Incorrect Command. Please run the command in the following format:
 1. We have allowed the user to select between hardcoded points for cropping and manual inputs
 2. At each frame, we have taken average densities of the last 10 (tunable parameter) frames.
 3. We have made the code modular, with parts working independently of other parts. 
-4. We have made the code readable, with relevantly named variables and clearly defined sections with the help of comments.
+4. We have made it very easy to change the frame rate of processing, a variable is simply needed to be changed to change the processing frame rate.
+5. We have made the code readable, with relevantly named variables and clearly defined sections with the help of comments.
+
 
 
  
