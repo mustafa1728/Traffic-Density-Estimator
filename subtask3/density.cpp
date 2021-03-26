@@ -295,6 +295,7 @@ public:
         cout<<buf<<'\n';
 
         string toWrite = "Frame Number, Queue Density, Dynamic Density\n";
+        if(frame_number != 0){      toWrite = "";    }
 
         toWrite.append(to_string(frame_number+1));
         toWrite.append(", ");
