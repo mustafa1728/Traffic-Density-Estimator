@@ -398,7 +398,7 @@ public:
                 MyFile<<writeDensities();
             }
             else{
-                cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number<<endl;
+                cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number<<'\n';
             }
 
             if (waitKey(10) == 27){     break;      }
@@ -417,97 +417,94 @@ public:
     }
 };
 
-struct args {
+struct Args {
     int number_of_threads;
     int thread_number;
 
     int argc;
     char** argv;
 
-    vector<float> * queue_densities;
-    vector<float> * dynamic_densities;
+    vector<float> queue_densities;
+    vector<float> dynamic_densities;
 };
 
 void * temporalThreadWorker(void * arguments){
+
+    int speed = 1;
     
-    int thread_id = ((struct args*)arguments)->thread_number;
-    int number_of_threads = ((struct args*)arguments)->number_of_threads;
-    int argc = ((struct args*)arguments)->argc;
-    char** argv = ((struct args*)arguments)->argv;
-    vector<float> * queue_densities = ((struct args*)arguments)->queue_densities;
-    vector<float> * dynamic_densities = ((struct args*)arguments)->dynamic_densities;
+    Args * loc_arg = ((struct Args*)arguments);
 
     // cout<<thread_id<<" "<<number_of_threads<<endl;
 
-    DensityCalculator threadCalculator(argc, argv);
-    threadCalculator.setHyperParameters(number_of_threads, -1, -1, -1, -1, -1, thread_id);
+    DensityCalculator threadCalculator(loc_arg->argc, loc_arg->argv);
+    threadCalculator.setHyperParameters(speed*loc_arg->number_of_threads, -1, -1, -1, -1, -1, loc_arg->thread_number);
 
     threadCalculator.runDensityEsitmator(false);
 
-    queue_densities[thread_id] = threadCalculator.getQueueDensities();
-    dynamic_densities[thread_id] = threadCalculator.getDynamicDensities();
+    loc_arg->queue_densities = threadCalculator.getQueueDensities();
+    loc_arg->dynamic_densities = threadCalculator.getDynamicDensities();
 
     pthread_exit(NULL);
 }
 
-void method3(int argc, char** argv, int number_of_threads = 10){
+void method3(int argc, char** argv, const int number_of_threads = 10){
 
-    pthread_t * my_threads;
-    my_threads = new pthread_t[number_of_threads];
+    pthread_t my_threads[number_of_threads];
 
-    vector<float> * queue_densities;
-    vector<float> * dynamic_densities;
+
+    Args t_args[number_of_threads];
 
     for(long i = 0; i<number_of_threads; i++){
 
-        struct args *p_thread_arguments = (struct args *)malloc(sizeof(struct args));
+        
 
-        p_thread_arguments->number_of_threads = number_of_threads;
-        p_thread_arguments->argc = argc;
-        p_thread_arguments->argv = argv;
-        p_thread_arguments->queue_densities = new vector<float>[number_of_threads];
-        p_thread_arguments->queue_densities = new vector<float>[number_of_threads];
-        p_thread_arguments->thread_number = i;
+        t_args[i].number_of_threads = number_of_threads;
+        t_args[i].argc = argc;
+        t_args[i].argv = argv;
+        t_args[i].thread_number = i;
 
 
 
-        int ret =  pthread_create(&my_threads[i], NULL, &temporalThreadWorker, (void*)p_thread_arguments);
+        int ret =  pthread_create(&my_threads[i], NULL, &temporalThreadWorker, (void*)&t_args[i]);
         if(ret != 0) {
             cout<<"Error: pthread not created properly\n";
             exit(1);
         }
-
-        queue_densities = ((struct args*)p_thread_arguments)->queue_densities;
-        dynamic_densities = ((struct args*)p_thread_arguments)->dynamic_densities;
     }
-    pthread_exit(NULL);
+    for(long i = 0; i<number_of_threads; i++){
+        pthread_join(my_threads[i], NULL);
+    }
+    // pthread_exit(NULL);
 
 
 
-    string out_file_name = "out.txt";
+    string out_file_name = "out_random.txt";
     ofstream MyFile(out_file_name);
-    int max_size = queue_densities[0].size();
+    uint max_size =0;
     for(int c = 0; c<number_of_threads; c++){
-        if(max_size<queue_densities[c].size()){
-            max_size = queue_densities[c].size();
+        if(max_size < t_args[c].queue_densities.size()){
+            max_size = t_args[c].queue_densities.size();
         }
     }
+    
     int i = 0;
     int counter = 0;
     char buf[256];
     char pattern[]  = "%15s %15s %15s";
     sprintf(buf, pattern,"Frame Number", "Queue Density", "Dynamic Density");
-    cout << buf << '\n';
+    cout << buf<<endl;
     char pattern_loop[]  = "%15i %15f %15f";
 
     MyFile<<"Frame Number, Queue Density, Dynamic Density\n";
     while(i<max_size){
-        counter+=1;
         for(int k = 0; k<number_of_threads; k++){
-            if(i>=queue_densities[k].size()){ continue; }
-            sprintf(buf, pattern_loop, counter, queue_densities[k][i], dynamic_densities[k][i]);
+
+            counter+=1;
+
+            if(i>=t_args[k].queue_densities.size()){ continue; }
+            sprintf(buf, pattern_loop, counter, t_args[k].queue_densities[i], t_args[k].dynamic_densities[i]);
             cout << buf << '\n';
-            MyFile<<counter<<", "<<queue_densities[k][i]<<", "<<dynamic_densities[k][i]<<"\n";
+            MyFile<<counter<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
         }
         i+=1;
 
@@ -522,7 +519,7 @@ int main(int argc, char** argv)
     // instance.setHyperParameters(1, 8, 10);
     // instance.runDensityEsitmator();
 
-    method3(argc, argv, 10);
+    method3(argc, argv, 4);
 
     
 
