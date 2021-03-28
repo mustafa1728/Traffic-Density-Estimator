@@ -28,10 +28,8 @@ class DensityCalculator{
 
 /// declaring and initialising useful variables ///
 private:
-    Mat image, background_img;
-    String videoPath, backimgPath;
-    String userinput;
-    
+    Mat background_img;
+
     int speed_multiplier;
     int number_of_frames_skip, number_of_frames_avg;
     int th_h, th_s, th_v;
@@ -39,16 +37,18 @@ private:
 
 
     string out_file_name;
-
-    VideoCapture cap;
+    String videoPath;
 
     Mat homographyMatrix;
-    vector<Point2f> pts_src;
+    
 
     int x_1, x_2, y_1, y_2;
 
 public:
     DensityCalculator(int argc, char** argv){
+
+        Mat image;
+        String userinput, backimgPath;
 
         setHyperParameters();
 
@@ -84,12 +84,7 @@ public:
 
         /// Reading the video and background image ///
 
-        cap.open(videoPath); 
-        if (cap.isOpened() == false)  
-        {
-            cout<<"Error: The video was not loaded properly. Please check its path.\n";
-            exit(1);
-        }
+        
         
         image = imread(backimgPath);
         if(!image.data)
@@ -100,7 +95,7 @@ public:
 
 
         /// Some values needed for homography and cropping ///
-
+        vector<Point2f> pts_src;
         if(userinput.compare("1") == 0){
             String user_input_window_name = "Chose 4 points to crop. (order: top left, top right, bottom right, bottom left)";
             namedWindow(user_input_window_name, WINDOW_NORMAL);
@@ -151,12 +146,8 @@ public:
     }
 
 /// Camera Angle correction and cropping ///
-
-private:
-    Mat cropped_frame;
-
 private: 
-    void correctCameraAngleAndCrop(){
+    void correctCameraAngleAndCrop(Mat frame, Mat & cropped_frame){
         Mat result; 
 
         warpPerspective(frame, result, homographyMatrix, frame.size());
@@ -166,19 +157,13 @@ private:
     }
 
 /// Queue density /// 
-private:
-    float queue_density;
-    vector<float> queue_densities;
-    Mat backgroundSubtracted;
-
-
 private: 
-    void updateQueueDensity(){
+    float getQueueDensity(Mat cropped_frame, Mat & backgroundSubtracted, Mat back_img){
 
         Mat background_img_hsv, cropped_frame_hsv, foreground_hsv, mask;
 
         cvtColor(cropped_frame, cropped_frame_hsv, COLOR_BGR2HSV);
-        cvtColor(background_img, background_img_hsv, COLOR_BGR2HSV);
+        cvtColor(back_img, background_img_hsv, COLOR_BGR2HSV);
         absdiff(cropped_frame_hsv, background_img_hsv, foreground_hsv);
         inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), mask);
 
@@ -195,29 +180,24 @@ private:
                 
             }
         }
-        queue_density = sum / (mask.rows * mask.cols);
-        queue_densities.push_back(queue_density);
+        float queue_density = sum / (mask.rows * mask.cols);
+        // queue_densities.push_back(queue_density);
         Mat back_temp;
         cropped_frame.copyTo(back_temp, mask);
         backgroundSubtracted = back_temp;
+
+        return queue_density;
         
+    }
+    float getQueueDensity(Mat cropped_frame, Mat & backgroundSubtracted){
+        return getQueueDensity(cropped_frame, backgroundSubtracted, background_img);
     }
 
 
 
 /// Dynamic density ///
-
-private:
-    float dynamic_density;
-    vector<float> dynamic_densities;
-    int frame_number;
-    Mat prev_frame;
-    Mat dynamicMask;
-    Mat* prev;
-
-
 private: 
-    void updateDynamicDensity(){
+    float getDynamicDensity(int frame_number, Mat cropped_frame, Mat frame, Mat & prev_frame, Mat & dynamicMask, Mat * prev){
         if(frame_number == 0){
             prev_frame = frame;
         }
@@ -250,22 +230,19 @@ private:
             }
         }
         
-        dynamic_density = sum / (dynamicMask.rows * dynamicMask.cols);
-        dynamic_densities.push_back(dynamic_density);
+        float dynamic_density = sum / (dynamicMask.rows * dynamicMask.cols);
+        // dynamic_densities.push_back(dynamic_density);
         prev[frame_number % number_of_frames_skip] = frame;
+        return dynamic_density;
 
         
     }
 
 
 /// Displaying Intermediate images, printing to console and writing to file
-private:
-    float * density_prev;
-    float * dynamic_prev;
-
 public:
 
-    void displayIntermediate(){
+    void displayIntermediate(Mat cropped_frame, Mat backgroundSubtracted, Mat dynamicMask, string window_name){
         cvtColor(dynamicMask, dynamicMask, COLOR_GRAY2BGR);
 
         Mat matArray[] = { cropped_frame, backgroundSubtracted, dynamicMask,};
@@ -278,7 +255,7 @@ public:
         // imshow("Dynamic Density mask", dynamicMask);
     }
 
-    void displayDensities(){
+    void displayDensities(int frame_number, float * density_prev, float * dynamic_prev, float queue_density, float dynamic_density){
         
 
         density_prev[frame_number % number_of_frames_avg] = queue_density;
@@ -306,7 +283,7 @@ public:
 
     }
 
-    string writeDensities(){
+    string writeDensities(int frame_number, float * density_prev, float * dynamic_prev, float queue_density, float dynamic_density){
         density_prev[frame_number % number_of_frames_avg] = queue_density;
         dynamic_prev[frame_number % number_of_frames_avg] = dynamic_density;
         float avg_density = 0, avg_dynamic_density = 0;
@@ -331,7 +308,7 @@ public:
         return toWrite;
     }
 
-    bool readFrame(){
+    bool readFrame(VideoCapture & cap, Mat & frame){
         Mat frame_temp;
         bool bSuccess;
         for (int i = 0; i<speed_multiplier; i++){
@@ -349,16 +326,18 @@ public:
 
 
 /// Main loop ///
-private: 
-    String window_name;
-    Mat frame;
-
 public:
-    void runDensityEsitmator(bool toDisplay = true){
+    void runDensityEsitmator(vector<float>& queue_densities, vector<float>& dynamic_densities, bool toDisplay = true){
 
-        frame_number = 0;
-        queue_density = 0.0;
-        dynamic_density = 0.0;
+        VideoCapture cap(videoPath); 
+        if (cap.isOpened() == false)  
+        {
+            cout<<"Error: The video was not loaded properly. Please check its path.\n";
+            exit(0);
+        }
+
+        
+        string window_name;
         if(toDisplay){
             window_name = "Original Cropped video, background removal and Dynamic Density mask";
             namedWindow(window_name, WINDOW_NORMAL);
@@ -366,6 +345,9 @@ public:
 
         ofstream MyFile(out_file_name);
 
+        Mat* prev;
+        float * density_prev;
+        float * dynamic_prev;
 
         prev = new Mat[number_of_frames_skip];
         density_prev = new float[number_of_frames_avg];
@@ -375,30 +357,34 @@ public:
             dynamic_prev[i] = 0;
         }
 
-        for(int i = 0; i<thread_id; i++){
-            bool random = cap.grab();
-        }
+        for(int i = 0; i<thread_id; i++){   bool random = cap.grab();   }
         // if(thread_id!=-1){ frame_number+=thread_id; }
+        Mat frame, prev_frame, cropped_frame, background_subtracted, dynamic_mask;
+        int frame_number = 0;
+        float queue_density = 0.0;
+        float dynamic_density = 0.0;
 
         while(true)
         {
-            if (!readFrame()){     cout << "The video is over!\n"; break;      }
+            if (!readFrame(cap, frame)){     cout << "The video is over!\n"; break;      }
 
-            correctCameraAngleAndCrop();
+            correctCameraAngleAndCrop(frame, cropped_frame);
 
-            updateQueueDensity();
-
-            updateDynamicDensity();
+            queue_density = getQueueDensity(cropped_frame, background_subtracted);
+            queue_densities.push_back(queue_density);
+            
+            dynamic_density = getDynamicDensity(frame_number, cropped_frame, frame, prev_frame, dynamic_mask, prev);
+            dynamic_densities.push_back(dynamic_density);
 
             if(toDisplay){
-                displayIntermediate();
+                displayIntermediate(cropped_frame, background_subtracted, dynamic_mask, window_name);
 
-                displayDensities();
+                displayDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
 
-                MyFile<<writeDensities();
+                MyFile<<writeDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
             }
             else{
-                cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number<<'\n';
+                cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number+1<<'\n';
             }
 
             if (waitKey(10) == 27){     break;      }
@@ -409,12 +395,15 @@ public:
 
     }
 
-    vector<float> getQueueDensities(){
-        return queue_densities;
+    void runDensityEsitmator(bool toDisplay){
+        vector<float> random1, random2;
+        runDensityEsitmator(random1, random2, toDisplay);
     }
-    vector<float> getDynamicDensities(){
-        return dynamic_densities;
+    void runDensityEsitmator(){
+        vector<float> random1, random2;
+        runDensityEsitmator(random1, random2, true);
     }
+
 };
 
 struct Args {
@@ -439,10 +428,7 @@ void * temporalThreadWorker(void * arguments){
     DensityCalculator threadCalculator(loc_arg->argc, loc_arg->argv);
     threadCalculator.setHyperParameters(speed*loc_arg->number_of_threads, -1, -1, -1, -1, -1, loc_arg->thread_number);
 
-    threadCalculator.runDensityEsitmator(false);
-
-    loc_arg->queue_densities = threadCalculator.getQueueDensities();
-    loc_arg->dynamic_densities = threadCalculator.getDynamicDensities();
+    threadCalculator.runDensityEsitmator(loc_arg->queue_densities, loc_arg->dynamic_densities, false);
 
     pthread_exit(NULL);
 }
@@ -513,13 +499,17 @@ void method3(int argc, char** argv, const int number_of_threads = 10){
 
 }
 
+// void method4(int argc, char** argv, int x, int y){
+//     ;
+// }
+
 int main(int argc, char** argv)
 {
     // DensityCalculator instance(argc, argv);
     // instance.setHyperParameters(1, 8, 10);
     // instance.runDensityEsitmator();
 
-    method3(argc, argv, 4);
+    method3(argc, argv, 10);
 
     
 
