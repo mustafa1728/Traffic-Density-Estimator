@@ -34,6 +34,9 @@ private:
 public:
     
     DensityCalculator();
+    void setspeed(int speed);
+    void setwidth(int width);
+    void setheight(int height);
     DensityCalculator(int argc, char** argv);
     void setHyperParameters(int speed, int resize_w, int resize_h, int frames_skip, int frames_avg, int h, int s, int v, int id);
     void correctCameraAngleAndCrop(const Mat & frame, Mat & cropped_frame);

@@ -32,7 +32,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         Mat image;
         String userinput, backimgPath;
 
-        setHyperParameters(5,1,1,8,10,10,8,35,-1);
+        setHyperParameters(1,1,1,8,10,10,8,35,-1);
 
         out_file_name = "out.txt";
 
@@ -118,7 +118,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
 
 
 
-    void DensityCalculator::setHyperParameters(int speed = 5, int resize_w = 1, int resize_h = 1, int frames_skip = 8, int frames_avg = 10, int h = 10, int s = 8, int v = 35, int id = -1){
+    void DensityCalculator::setHyperParameters(int speed = 1, int resize_w = 1, int resize_h = 1, int frames_skip = 8, int frames_avg = 10, int h = 10, int s = 8, int v = 35, int id = -1){
         if(speed!=-1){ speed_multiplier = speed; }
         if(frames_skip!=-1){ number_of_frames_skip = frames_skip; }
         if(frames_avg!=-1){ number_of_frames_avg = frames_avg; }
@@ -128,6 +128,18 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         if(resize_w!=-1){ resize_factor_width = resize_w; }
         if(resize_h!=-1){ resize_factor_height = resize_h; }
         thread_id = id;
+    }
+
+    void DensityCalculator::setspeed(int speed){
+        speed_multiplier = speed;
+    }
+
+    void DensityCalculator::setwidth(int width){
+        resize_factor_width = width;
+    }
+    
+    void DensityCalculator::setheight(int height){
+        resize_factor_height =height;
     }
 
 /// Camera Angle correction and cropping ///
