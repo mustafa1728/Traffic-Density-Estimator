@@ -1,5 +1,5 @@
 #include "Method3.hpp"
-#include "Density.hpp"
+#include "../Density.hpp"
 #include<stdio.h>
 #include <opencv2/opencv.hpp>
 #include <iostream>
@@ -20,12 +20,12 @@ void * spacialThreadWorker(void * arguments){
 
     loc_arg->queue_density = loc_arg->obj.getQueueDensity(crop_img, loc_arg->background_subtracted, back_crop);
             
-    cout<<"Thread "<<loc_arg->thread_i<<" x "<<loc_arg->thread_j<<" has worked on a frame now!\n";
+    // cout<<"Thread "<<loc_arg->thread_i<<" x "<<loc_arg->thread_j<<" has worked on a frame now!\n";
     pthread_exit(NULL);
     
 }
 
-void method3(int argc, char** argv, const int x, const int y){
+void method3(int argc, char** argv, const int x, const int y, bool toDisplay){
     pthread_t my_threads[x][y];
 
 
@@ -42,7 +42,10 @@ void method3(int argc, char** argv, const int x, const int y){
     Mat prev_frame;
 
     String window_name = "Background removal";
-    namedWindow(window_name, WINDOW_NORMAL);
+    if(toDisplay){
+        namedWindow(window_name, WINDOW_NORMAL);
+    }
+    
 
 
     Args_spacial t_args[x][y];
@@ -82,7 +85,7 @@ void method3(int argc, char** argv, const int x, const int y){
 
         Mat horizontals[x];
         Mat concatenated;
-        
+            
         float queue_density = 0.0;
         for(int i = 0; i<x; i++){
             Mat verticals[y];
@@ -92,15 +95,19 @@ void method3(int argc, char** argv, const int x, const int y){
                 queue_density+=t_args[i][j].queue_density;
                 verticals[j] = t_args[i][j].background_subtracted;
             }
-            vconcat( verticals, y, horizontals[i] );
+            if(toDisplay) { vconcat( verticals, y, horizontals[i] ); }
         }
-        hconcat(horizontals, x, concatenated);
-        imshow(window_name, concatenated);
+        if(toDisplay){ 
+            hconcat(horizontals, x, concatenated); 
+            imshow(window_name, concatenated);
+            if (waitKey(1) == 27)
+            {
+                break;
+            }
+        }
 
-        if (waitKey(10) == 27)
-        {
-            break;
-        }
+        
+        
 
         queue_density = queue_density / max(x*y, 1);
         cout<<queue_density<<endl;
@@ -124,9 +131,13 @@ void method3(int argc, char** argv, const int x, const int y){
         }
         avg_queue_densities.push_back(avg/num);
     }
-
+    string out_file_name = "out.txt";
+    ofstream MyFile(out_file_name);
     cout<<"Frame Number \tQueue Density\n";
+    MyFile<<"Frame Number, Queue Density\n";
     for(int i = 0; i<avg_queue_densities.size(); i++){
         cout<<i+1<<"\t\t"<<avg_queue_densities[i]<<endl;
+        MyFile<<i+1<<", "<<avg_queue_densities[i]<<"\n";
     }
+    MyFile.close();
 }

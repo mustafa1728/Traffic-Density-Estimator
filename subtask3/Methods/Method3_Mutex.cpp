@@ -1,6 +1,6 @@
 #include "Method3.hpp"
 #include "Method3_Mutex.hpp"
-#include "Density.hpp"
+#include "../Density.hpp"
 #include<stdio.h>
 #include <opencv2/opencv.hpp>
 #include <iostream>
@@ -141,7 +141,7 @@ void method3_beta(int argc, char** argv, const int x, const int y){
         hconcat(horizontals, x, concatenated);
         imshow(window_name, concatenated);
 
-        if (waitKey(10) == 27)
+        if (waitKey(1) == 27)
         {
             break;
         }
@@ -188,8 +188,13 @@ void method3_beta(int argc, char** argv, const int x, const int y){
         avg_queue_densities.push_back(avg/num);
     }
 
+    string out_file_name = "out.txt";
+    ofstream MyFile(out_file_name);
     cout<<"Frame Number \tQueue Density\n";
+    MyFile<<"Frame Number, Queue Density\n";
     for(int i = 0; i<avg_queue_densities.size(); i++){
         cout<<i+1<<"\t\t"<<avg_queue_densities[i]<<endl;
+        MyFile<<i+1<<", "<<avg_queue_densities[i]<<"\n";
     }
+    MyFile.close();
 }

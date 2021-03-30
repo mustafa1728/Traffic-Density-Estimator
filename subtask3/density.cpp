@@ -23,7 +23,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
 
 
     DensityCalculator::DensityCalculator(){
-        setHyperParameters(5,1,1,8,10,10,8,35,-1);
+        setHyperParameters(1,1,1,8,10,10,8,35,-1);
         videoPath = "/Users/tamajit/Desktop/trafficvideo.mp4";
     }
 
@@ -37,9 +37,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         out_file_name = "out.txt";
 
         /// handling command line arguments ///
-        backimgPath = "/Users/tamajit/Desktop/IIT DELHI/COP290/COP290_task1/subtask2/background.jpg";
+        backimgPath = "background.jpg";
         userinput = "0";
-        videoPath = "/Users/tamajit/Desktop/trafficvideo.mp4";
+        videoPath = "../../trafficvideo.mp4";
         if (argc == 1) {
            ;
         }
@@ -278,7 +278,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
             cout << buf << '\n';
         }
         char pattern[]  = "%15i %15f %15f";
-        sprintf(buf, pattern, frame_number + 1, avg_density, avg_dynamic_density);
+        sprintf(buf, pattern, frame_number, avg_density, avg_dynamic_density);
         
         cout<<buf<<'\n';
 
@@ -301,7 +301,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         string toWrite = "Frame Number, Queue Density, Dynamic Density\n";
         if(frame_number != 0){      toWrite = "";    }
 
-        toWrite.append(to_string(frame_number+1));
+        toWrite.append(to_string(frame_number));
         toWrite.append(", ");
         toWrite.append(to_string(avg_density));
         toWrite.append(", ");
@@ -397,19 +397,24 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
             if(toDisplay){
                 displayIntermediate(cropped_frame, background_subtracted, dynamic_mask, window_name);
 
-                displayDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
-
-                MyFile<<writeDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
-
+                if (waitKey(1) == 27){     break;      }
             }
             else{
                 setAvgQueueDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density, queue_densities, dynamic_densities);
-                cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number+1<<'\n';
+                if(thread_id!=-1){
+                    cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number+1<<'\n';
+                }
+                
             }
 
-            if (waitKey(10) == 27){     break;      }
-
             frame_number+=1;
+
+            if(thread_id==-1){
+                
+                MyFile<<writeDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
+
+                displayDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
+            }            
         }
         MyFile.close();
 

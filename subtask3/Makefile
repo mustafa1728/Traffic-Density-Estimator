@@ -2,7 +2,7 @@ CC = g++
 OPENCV4 = -pthread -std=c++11 `pkg-config --cflags --libs opencv4`
 LIBS = $(OPENCV4)
 #SRC will contain the names of the cpp files
-SRC = main.cpp Density.cpp Method3.cpp Method4.cpp Method3_Mutex.cpp
+SRC = main.cpp Density.cpp Methods/Method3.cpp Methods/Method4.cpp Methods/Method3_Mutex.cpp
 #OBJ names of object files
 OBJ = $(SRC:.cpp = .o)
 #exe name

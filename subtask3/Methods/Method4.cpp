@@ -1,5 +1,5 @@
 #include "Method4.hpp"
-#include "Density.hpp"
+#include "../Density.hpp"
 #include<stdio.h>
 #include <opencv2/opencv.hpp>
 #include <iostream>

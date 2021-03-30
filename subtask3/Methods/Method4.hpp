@@ -1,7 +1,7 @@
 #ifndef Method4_hpp
 #define Method4_hpp
 
-#include "Density.hpp"
+#include "../Density.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 

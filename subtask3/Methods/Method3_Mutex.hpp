@@ -1,14 +1,7 @@
-//
-//  Method3_Mutex.hpp
-//  COP290
-//
-//  Created by Tamajit Banerjee on 30/03/21.
-//
-
 #ifndef Method3_Mutex_hpp
 #define Method3_Mutex_hpp
 
-#include "Density.hpp"
+#include "../Density.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 

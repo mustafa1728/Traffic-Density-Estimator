@@ -1,0 +1,8 @@
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 2
+Time:	267.047 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 2
+Time:	295.529 seconds
