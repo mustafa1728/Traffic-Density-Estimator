@@ -37,9 +37,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         out_file_name = "out.txt";
 
         /// handling command line arguments ///
-        backimgPath = "background.jpg";
+        backimgPath = "/Users/tamajit/Desktop/COP290_task1/subtask3/background.jpg";
         userinput = "0";
-        videoPath = "../../trafficvideo.mp4";
+        videoPath = "/Users/tamajit/Desktop/trafficvideo.mp4";
         if (argc == 1) {
            ;
         }
@@ -196,48 +196,47 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
 /// Dynamic density ///
 
     float DensityCalculator::getDynamicDensity(int frame_number, const Mat & cropped_frame, const Mat & frame, Mat & prev_frame, Mat & dynamicMask, Mat * prev){
-        if(frame_number == 0){
-            prev_frame = frame;
-        }
-        if(frame_number >= number_of_frames_skip){
-            prev_frame = prev[frame_number % number_of_frames_skip];
-        }
-        // pBackSub->apply(final_image, dynamicMask);
-        Mat background_img_hsv, cropped_frame_hsv, foreground_hsv;
-
-        resize(background_img, background_img, Size(0,0), (1/(double)resize_factor_width), (1/(double)resize_factor_height));
-
-        cvtColor(cropped_frame, cropped_frame_hsv, COLOR_BGR2HSV);
-        cvtColor(background_img, background_img_hsv, COLOR_BGR2HSV);
-
-        Mat prev_homography, prev_result, prev_result_hsv, back_temp;
-
-        warpPerspective(prev_frame, prev_homography, homographyMatrix, frame.size());
-        Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
-        prev_result = prev_homography(crop_region);
-        resize(prev_result, prev_result, Size(0,0), (1/(double)resize_factor_width), (1/(double)resize_factor_height));
-        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);
-        absdiff(cropped_frame_hsv, prev_result_hsv, foreground_hsv);
-        inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), dynamicMask);
-        
-        dilate(dynamicMask, dynamicMask, Mat(), Point(-1, -1), 2, 1, 1);
-
-        float sum = 0;
-        for (int i = 0; i < dynamicMask.rows; ++i) {
-            for (int j = 0; j < dynamicMask.cols; ++j) {
-                if(dynamicMask.at<int>(i,j)!=0){
-                    sum = sum + 1;
-                }
-            }
-        }
-        cropped_frame.copyTo(back_temp, dynamicMask);
-        dynamicMask = back_temp;
-        float dynamic_density = sum / (dynamicMask.rows * dynamicMask.cols);
-        // dynamic_densities.push_back(dynamic_density);
-        prev[frame_number % number_of_frames_skip] = frame;
-        return dynamic_density;
-
-        
+//        if(frame_number == 0){
+//            prev_frame = frame;
+//        }
+//        if(frame_number >= number_of_frames_skip){
+//            prev_frame = prev[frame_number % number_of_frames_skip];
+//        }
+//        // pBackSub->apply(final_image, dynamicMask);
+//        Mat background_img_hsv, cropped_frame_hsv, foreground_hsv;
+//
+//        resize(background_img, background_img, Size(0,0), (1/(double)resize_factor_width), (1/(double)resize_factor_height));
+//
+//        cvtColor(cropped_frame, cropped_frame_hsv, COLOR_BGR2HSV);
+//        cvtColor(background_img, background_img_hsv, COLOR_BGR2HSV);
+//
+//        Mat prev_homography, prev_result, prev_result_hsv, back_temp;
+//
+//        warpPerspective(prev_frame, prev_homography, homographyMatrix, frame.size());
+//        Rect crop_region(x_1, y_1, x_2 - x_1, y_2 - y_1);
+//        prev_result = prev_homography(crop_region);
+//        resize(prev_result, prev_result, Size(0,0), (1/(double)resize_factor_width), (1/(double)resize_factor_height));
+//        cvtColor(prev_result, prev_result_hsv, COLOR_BGR2HSV);
+//        absdiff(cropped_frame_hsv, prev_result_hsv, foreground_hsv);
+//        inRange(foreground_hsv, Scalar(th_h, th_s, th_v), Scalar(180, 255, 255), dynamicMask);
+//
+//        dilate(dynamicMask, dynamicMask, Mat(), Point(-1, -1), 2, 1, 1);
+//
+//        float sum = 0;
+//        for (int i = 0; i < dynamicMask.rows; ++i) {
+//            for (int j = 0; j < dynamicMask.cols; ++j) {
+//                if(dynamicMask.at<int>(i,j)!=0){
+//                    sum = sum + 1;
+//                }
+//            }
+//        }
+//        cropped_frame.copyTo(back_temp, dynamicMask);
+//        dynamicMask = back_temp;
+//        float dynamic_density = sum / (dynamicMask.rows * dynamicMask.cols);
+//        // dynamic_densities.push_back(dynamic_density);
+//        prev[frame_number % number_of_frames_skip] = frame;
+//        return dynamic_density;
+        return 0.0;
     }
 
 
