@@ -278,11 +278,10 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
             cout << buf << '\n';
         }
         char pattern[]  = "%15i %15f %15f";
-        sprintf(buf, pattern, frame_number, avg_density, avg_dynamic_density);
-        
-        cout<<buf<<'\n';
-
-        
+        for(int i =0; i<speed_multiplier; i++){
+            sprintf(buf, pattern, speed_multiplier*(frame_number-1) + 1 + i, avg_density, avg_dynamic_density);
+            cout<<buf<<'\n';
+        }  
 
     }
 
@@ -301,12 +300,15 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         string toWrite = "Frame Number, Queue Density, Dynamic Density\n";
         if(frame_number != 0){      toWrite = "";    }
 
-        toWrite.append(to_string(frame_number));
-        toWrite.append(", ");
-        toWrite.append(to_string(avg_density));
-        toWrite.append(", ");
-        toWrite.append(to_string(avg_dynamic_density));
-        toWrite.append("\n");
+        for(int i =0; i<speed_multiplier; i++){
+            toWrite.append(to_string(speed_multiplier*(frame_number-1) + 1 + i));
+            toWrite.append(", ");
+            toWrite.append(to_string(avg_density));
+            toWrite.append(", ");
+            toWrite.append(to_string(avg_dynamic_density));
+            toWrite.append("\n");
+        }
+        
 
         return toWrite;
     }
@@ -402,7 +404,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
             else{
                 setAvgQueueDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density, queue_densities, dynamic_densities);
                 if(thread_id!=-1){
-                    cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number+1<<'\n';
+                    // cout<<"The thread "<<thread_id<<" is operating on its frame number "<<frame_number+1<<'\n';
                 }
                 
             }
@@ -413,7 +415,8 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
                 
                 MyFile<<writeDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
 
-                displayDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);
+                displayDensities(frame_number, density_prev, dynamic_prev, queue_density, dynamic_density);  
+                
             }            
         }
         MyFile.close();

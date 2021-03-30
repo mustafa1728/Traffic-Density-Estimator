@@ -1,4 +1,3 @@
-
 Method:	2
 Parameters:	 width divisions = 2 	height division = 2
 Time:	267.047 seconds
@@ -6,3 +5,15 @@ Time:	267.047 seconds
 Method:	2
 Parameters:	 width divisions = 2 	height division = 2
 Time:	295.529 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 2
+Time:	279.758 seconds
+
+Method:	4
+Parameter:	 number of threads = 3
+Time:	369.681 seconds
+
+Method:	1
+Parameter:	 numer of frames skipped = 5
+Time:	110.458 seconds

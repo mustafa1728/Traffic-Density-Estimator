@@ -14,13 +14,13 @@ compile: $(OBJ)
 
 run: 
 	$(info Running compiled code...)
-	@./$(CNAME) 2 2 2
+	@./$(CNAME) 5 1
 
 all: $(OBJ)
 	$(info Compiling code...)
 	@$(CC) $(OBJ) -o $(CNAME) $(LIBS)
 	$(info Running compiled code...) 
-	@./$(CNAME) 2 2 2
+	@./$(CNAME) 5 1
 
 clean:
 	$(info Deleting compiled files...)

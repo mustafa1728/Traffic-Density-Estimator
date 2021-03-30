@@ -110,7 +110,7 @@ void method3(int argc, char** argv, const int x, const int y, bool toDisplay){
         
 
         queue_density = queue_density / max(x*y, 1);
-        cout<<queue_density<<endl;
+        // cout<<queue_density<<endl;
 
         queue_densities.push_back(queue_density);
 

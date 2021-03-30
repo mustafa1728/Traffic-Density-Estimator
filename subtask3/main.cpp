@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     }else if(method == 3){
         method3(argc-3, argv, atoi(argv[argc-3]), atoi(argv[argc-2]), false);
     }else if(method == 4){
-        method4(argc-1, argv, atoi(argv[1]));
+        method4(argc-2, argv, atoi(argv[argc-2]));
     }else if(method == 5){
         method3_beta(argc-1, argv, 2, 2);
     }
@@ -52,6 +52,21 @@ int main(int argc, char** argv)
     else if(method==4)
         TimeFile<<"Parameter:\t number of threads = "<<atoi(argv[argc-2]);
     TimeFile<<"\nTime:\t"<<tm.getTimeSec()<<" seconds\n";
+    TimeFile.close();
+
+
+    ofstream Timecsv("time.csv", ofstream::out | ofstream::app);
+    Timecsv<<method<<", ";
+    if(method==1)
+        Timecsv<<atoi(argv[argc-2]);
+    else if(method==2)
+        Timecsv<<atoi(argv[argc-3])<<" and "<<atoi(argv[argc-2]);
+    else if(method==3)
+        Timecsv<<atoi(argv[argc-3])<<" and "<<atoi(argv[argc-2]);
+    else if(method==4)
+        Timecsv<<atoi(argv[argc-2]);
+    Timecsv<<", "<<tm.getTimeSec()<<"\n";
+    Timecsv.close();
 
     return 0;
 }

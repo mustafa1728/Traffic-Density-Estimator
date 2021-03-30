@@ -20,7 +20,7 @@ void * temporalThreadWorker(void * arguments){
     // cout<<thread_id<<" "<<number_of_threads<<endl;
 
     DensityCalculator threadCalculator(loc_arg->argc, loc_arg->argv);
-    threadCalculator.setHyperParameters(speed*loc_arg->number_of_threads, -1, -1, -1, -1, -1, loc_arg->thread_number,35,-1);
+    threadCalculator.setHyperParameters(speed*loc_arg->number_of_threads, -1, -1, -1, -1, -1, -1, -1, loc_arg->thread_number);
 
     threadCalculator.runDensityEsitmator(loc_arg->queue_densities, loc_arg->dynamic_densities, false);
 
