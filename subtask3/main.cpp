@@ -40,6 +40,11 @@ int main(int argc, char** argv)
         method3_beta(argc-1, argv, 2, 2);
     }
 
+
+
+
+
+
     tm.stop();
     ofstream TimeFile("time.txt", ofstream::out | ofstream::app);
     TimeFile<<"\nMethod:\t"<<method<<"\n";
@@ -47,7 +52,7 @@ int main(int argc, char** argv)
         TimeFile<<"Parameter:\t numer of frames skipped = "<<atoi(argv[argc-2]);
     else if(method==2)
         TimeFile<<"Parameters:\t width divisions = "<<atoi(argv[argc-3])<<" \theight division = "<<atoi(argv[argc-2]);
-    else if(method==3)
+    else if(method==3 || method == 5)
         TimeFile<<"Parameters:\t width divisions = "<<atoi(argv[argc-3])<<" \theight division = "<<atoi(argv[argc-2]);
     else if(method==4)
         TimeFile<<"Parameter:\t number of threads = "<<atoi(argv[argc-2]);

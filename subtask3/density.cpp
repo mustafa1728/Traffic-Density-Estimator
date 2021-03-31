@@ -37,9 +37,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         out_file_name = "out.txt";
 
         /// handling command line arguments ///
-        backimgPath = "/Users/tamajit/Desktop/COP290_task1/subtask3/background.jpg";
+        backimgPath = "background.jpg";
         userinput = "0";
-        videoPath = "/Users/tamajit/Desktop/trafficvideo.mp4";
+        videoPath = "../../trafficvideo.mp4";
         if (argc == 1) {
            ;
         }
@@ -140,6 +140,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
     
     void DensityCalculator::setheight(int height){
         resize_factor_height =height;
+    }
+    void DensityCalculator::setthreadId(int thread){
+        thread_id =thread;
     }
 
 /// Camera Angle correction and cropping ///
@@ -269,17 +272,12 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         }
         avg_density = avg_density / number_of_frames_avg;
         avg_dynamic_density = avg_dynamic_density / number_of_frames_avg;
-        char buf[256];
     
-        if(frame_number == 0){
-            char pattern[]  = "%15s %15s %15s";
-            sprintf(buf, pattern,"Frame Number", "Queue Density", "Dynamic Density");
-            cout << buf << '\n';
+        if(frame_number == 1){
+            cout << "Frame Number, Queue Density, Dynamic Density\n";
         }
-        char pattern[]  = "%15i %15f %15f";
         for(int i =0; i<speed_multiplier; i++){
-            sprintf(buf, pattern, speed_multiplier*(frame_number-1) + 1 + i, avg_density, avg_dynamic_density);
-            cout<<buf<<'\n';
+            cout<<speed_multiplier*(frame_number-1) + 1 + i<<", "<<avg_density<<", "<<avg_dynamic_density<<'\n';
         }  
 
     }

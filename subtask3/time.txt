@@ -277,3 +277,19 @@ Time:	58.9385 seconds
 Method:	4
 Parameter:	 number of threads = 9
 Time:	62.9436 seconds
+
+Method:	0
+
+Time:	369.045 seconds
+
+Method:	51
+
+Time:	1.4476e-05 seconds
+
+Method:	4
+Parameter:	 number of threads = 3
+Time:	401.672 seconds
+
+Method:	4
+Parameter:	 number of threads = 3
+Time:	223.569 seconds

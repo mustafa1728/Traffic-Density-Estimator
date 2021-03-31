@@ -20,7 +20,8 @@ void * temporalThreadWorker(void * arguments){
     // cout<<thread_id<<" "<<number_of_threads<<endl;
 
     DensityCalculator threadCalculator(loc_arg->argc, loc_arg->argv);
-    threadCalculator.setHyperParameters(speed*loc_arg->number_of_threads, -1, -1, -1, -1, -1, -1, -1, loc_arg->thread_number);
+    threadCalculator.setspeed(speed*loc_arg->number_of_threads);
+    threadCalculator.setthreadId(loc_arg->thread_number);
 
     threadCalculator.runDensityEsitmator(loc_arg->queue_densities, loc_arg->dynamic_densities, false);
 
@@ -69,12 +70,7 @@ void method4(int argc, char** argv, const int number_of_threads){
     
     int i = 0;
     int counter = 0;
-    char buf[256];
-    char pattern[]  = "%15s %15s %15s";
-    sprintf(buf, pattern,"Frame Number", "Queue Density", "Dynamic Density");
-    cout << buf<<endl;
-    char pattern_loop[]  = "%15i %15f %15f";
-
+    cout<<"Frame Number, Queue Density, Dynamic Density\n";
     MyFile<<"Frame Number, Queue Density, Dynamic Density\n";
     while(i<max_size){
         for(int k = 0; k<number_of_threads; k++){
@@ -82,8 +78,7 @@ void method4(int argc, char** argv, const int number_of_threads){
             counter+=1;
 
             if(i>=t_args[k].queue_densities.size()){ continue; }
-            sprintf(buf, pattern_loop, counter, t_args[k].queue_densities[i], t_args[k].dynamic_densities[i]);
-            cout << buf << '\n';
+            cout << counter<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
             MyFile<<counter<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
         }
         i+=1;

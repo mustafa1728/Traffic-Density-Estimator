@@ -133,10 +133,10 @@ void method3(int argc, char** argv, const int x, const int y, bool toDisplay){
     }
     string out_file_name = "out.txt";
     ofstream MyFile(out_file_name);
-    cout<<"Frame Number \tQueue Density\n";
+    cout<<"Frame Number, Queue Density\n";
     MyFile<<"Frame Number, Queue Density\n";
     for(int i = 0; i<avg_queue_densities.size(); i++){
-        cout<<i+1<<"\t\t"<<avg_queue_densities[i]<<endl;
+        cout<<i+1<<", "<<avg_queue_densities[i]<<endl;
         MyFile<<i+1<<", "<<avg_queue_densities[i]<<"\n";
     }
     MyFile.close();
