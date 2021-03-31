@@ -36,12 +36,13 @@ void * spacialThreadWorkerBeta(void * arguments){
 }
 
 
-void method3_beta(int argc, char** argv, const int x, const int y){
+void method3_beta(int argc, char** argv, const int x, const int y, bool toDisplay){
     pthread_t my_threads[x][y];
 
     VideoCapture cap;
     DensityCalculator instance(argc, argv);
     instance.getVideoCapture(cap);
+    double fps = cap.get(cv::CAP_PROP_FPS);
     int frame_number = 0;
     Mat frame_temp, frame, cropped_frame;
 
@@ -52,7 +53,9 @@ void method3_beta(int argc, char** argv, const int x, const int y){
     Mat prev_frame;
 
     String window_name = "Background removal";
-    namedWindow(window_name, WINDOW_NORMAL);
+    if(toDisplay){
+        namedWindow(window_name, WINDOW_NORMAL);
+    }
 
     if (pthread_mutex_init(&spacial_lock, NULL) != 0) {
         printf("\n mutex init has failed\n");
@@ -134,16 +137,18 @@ void method3_beta(int argc, char** argv, const int x, const int y){
             Mat verticals[y];
             for(int j = 0; j<y; j++){
                 queue_density+=t_args[i][j].queue_density;
-                verticals[j] = t_args[i][j].background_subtracted;
+                if(toDisplay){verticals[j] = t_args[i][j].background_subtracted;}
             }
-            vconcat( verticals, y, horizontals[i] );
+            if(toDisplay){vconcat( verticals, y, horizontals[i] );}
         }
-        hconcat(horizontals, x, concatenated);
-        imshow(window_name, concatenated);
+        if(toDisplay){
+            hconcat(horizontals, x, concatenated);
+            imshow(window_name, concatenated);
 
-        if (waitKey(1) == 27)
-        {
-            break;
+            if (waitKey(1) == 27)
+            {
+                break;
+            }
         }
 
         queue_density = queue_density / max(x*y, 1);
@@ -190,11 +195,11 @@ void method3_beta(int argc, char** argv, const int x, const int y){
 
     string out_file_name = "out.txt";
     ofstream MyFile(out_file_name);
-    cout<<"Frame Number, Queue Density\n";
-    MyFile<<"Frame Number, Queue Density\n";
+    cout<<"Time of video Queue Density, Dynamic Density\n";
+    MyFile<<"Time of video, Queue Density, Dynamic Density\n";
     for(int i = 0; i<avg_queue_densities.size(); i++){
-        cout<<i+1<<", "<<avg_queue_densities[i]<<endl;
-        MyFile<<i+1<<", "<<avg_queue_densities[i]<<"\n";
+        cout<<(double)(i+1)/fps<<", "<<avg_queue_densities[i]<<", 0"<<endl;
+        MyFile<<(double)(i+1)/fps<<", "<<avg_queue_densities[i]<<", 0"<<endl;
     }
     MyFile.close();
 }

@@ -22,10 +22,12 @@ private:
     String videoPath;
     Mat homographyMatrix;
     int x_1, x_2, y_1, y_2;
+    
 
 public:
     
     Mat background_img;
+    double fps;
     
 private:
     void setHyperParameters(int speed, int resize_w, int resize_h, int frames_skip, int frames_avg, int h, int s, int v, int id);
@@ -50,7 +52,7 @@ public:
     void correctCameraAngleAndCrop(const Mat & frame, Mat & cropped_frame);
     float getQueueDensity(const Mat & cropped_frame, Mat & backgroundSubtracted, const Mat back_img);
     float getQueueDensity(const Mat & cropped_frame, Mat & backgroundSubtracted);
-    float getDynamicDensity(int frame_number, const Mat & cropped_frame, const Mat & frame, Mat & prev_frame, Mat & dynamicMask, Mat * prev);
+    float getDynamicDensity(int frame_number, const Mat & cropped_frame, Mat frame, Mat & prev_frame, Mat & dynamicMask, Mat * prev);
     
     
 

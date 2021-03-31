@@ -293,3 +293,11 @@ Time:	401.672 seconds
 Method:	4
 Parameter:	 number of threads = 3
 Time:	223.569 seconds
+
+Method:	3
+Parameters:	 width divisions = 2 	height division = 2
+Time:	749.044 seconds
+
+Method:	5
+Parameters:	 width divisions = 2 	height division = 2
+Time:	705.646 seconds

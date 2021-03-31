@@ -8,15 +8,16 @@ df_baseline = pd.read_csv(baseline_file_path)
 
 output_folder_path = "./out_files"
 
-file_path = "method1_1_out.csv"
-
 file_list= [file for file in os.listdir(output_folder_path) if file.endswith('.csv')]
 
 
 for file in file_list:
-	if(file!=file_path):
-		continue
-	df = pd.read_csv(os.path.join(output_folder_path, file))
+	# file_path = "out.csv"
+	# # if(file!=file_path):
+	# # 	continue
+	# file = file_path
+	df = pd.read_csv("out.csv")
+	# df = pd.read_csv(os.path.join(output_folder_path, file))
 	i = 0
 	j = 0
 	queue_total_square_diff = 0
@@ -33,8 +34,8 @@ for file in file_list:
 			j+=1
 	queue_rmse = np.sqrt(queue_total_square_diff/count)
 
-	print("Error of the file: ", file, " is ", queue_rmse)
-
+	print("Error in Queue Denisty of the file: ", file, " is ", queue_rmse)
+	break
 
 
 

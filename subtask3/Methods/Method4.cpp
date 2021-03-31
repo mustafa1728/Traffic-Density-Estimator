@@ -9,7 +9,7 @@
 using namespace cv;
 using namespace std;
 
-
+double fps;
 
 void * temporalThreadWorker(void * arguments){
 
@@ -24,6 +24,7 @@ void * temporalThreadWorker(void * arguments){
     threadCalculator.setthreadId(loc_arg->thread_number);
 
     threadCalculator.runDensityEsitmator(loc_arg->queue_densities, loc_arg->dynamic_densities, false);
+    fps = threadCalculator.fps;
 
     pthread_exit(NULL);
 }
@@ -70,16 +71,16 @@ void method4(int argc, char** argv, const int number_of_threads){
     
     int i = 0;
     int counter = 0;
-    cout<<"Frame Number, Queue Density, Dynamic Density\n";
-    MyFile<<"Frame Number, Queue Density, Dynamic Density\n";
+    cout<<"Time of video, Queue Density, Dynamic Density\n";
+    MyFile<<"Time of video, Queue Density, Dynamic Density\n";
     while(i<max_size){
         for(int k = 0; k<number_of_threads; k++){
 
             counter+=1;
 
             if(i>=t_args[k].queue_densities.size()){ continue; }
-            cout << counter<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
-            MyFile<<counter<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
+            cout << (double)(counter / fps)<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
+            MyFile<<(double)(counter / fps)<<", "<<t_args[k].queue_densities[i]<<", "<<t_args[k].dynamic_densities[i]<<"\n";
         }
         i+=1;
 

@@ -37,7 +37,7 @@ int main(int argc, char** argv)
     }else if(method == 4){
         method4(argc-2, argv, atoi(argv[argc-2]));
     }else if(method == 5){
-        method3_beta(argc-1, argv, 2, 2);
+        method3_beta(argc-3, argv, atoi(argv[argc-3]), atoi(argv[argc-2]), true);
     }
 
 
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     ofstream TimeFile("time.txt", ofstream::out | ofstream::app);
     TimeFile<<"\nMethod:\t"<<method<<"\n";
     if(method==1)
-        TimeFile<<"Parameter:\t numer of frames skipped = "<<atoi(argv[argc-2]);
+        TimeFile<<"Parameter:\t number of frames skipped = "<<atoi(argv[argc-2]);
     else if(method==2)
         TimeFile<<"Parameters:\t width divisions = "<<atoi(argv[argc-3])<<" \theight division = "<<atoi(argv[argc-2]);
     else if(method==3 || method == 5)
