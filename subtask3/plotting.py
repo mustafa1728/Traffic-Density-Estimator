@@ -85,7 +85,7 @@ plt.close()
 plt.ylim(50, 100)
 method4_parameters, method4_times = getAvgSorted(method4_parameters, method4_times)
 plt.plot(method4_parameters, method4_times, label='Method4')
-plt.scatter(method4_parameters, method4_times)
+plt.scatter(method4_parameters, method4_times, color = 'b')
 
 
 plt.xlabel("Number of Threads")
@@ -106,7 +106,7 @@ method2_parameters, method2_times = getAvgSorted(method2_parameters, method2_tim
 plt.plot(method2_parameters, method2_times, label='Method2')
 plt.scatter(method2_parameters, method2_times)
 
-plt.xlabel("Number of smaller sections")
+plt.xlabel("Reduction factor")
 plt.title("Runtime vs parameter for Method 2")
 plt.ylabel('Runtime')
 figure = plt.gcf()
@@ -132,7 +132,7 @@ plt.savefig("plots/runtime/method3_time.png", dpi=300)
 plt.close()
 
 # Method5
-plt.ylim(30, 50)
+# plt.ylim(4, 50)
 method5_parameters, method5_times = getAvgSorted(method5_parameters, method5_times)
 plt.plot(method5_parameters, method5_times, label='Method5')
 plt.scatter(method5_parameters, method5_times)
@@ -249,7 +249,7 @@ method2_parameters, method2_errors = getAvgSorted(method2_parameters, method2_er
 plt.plot(method2_parameters, method2_errors, label='Method2')
 plt.scatter(method2_parameters, method2_errors)
 
-plt.xlabel("Number of smaller sections")
+plt.xlabel("Reduction factor")
 plt.title("Error vs parameter for Method 2")
 plt.ylabel('Error')
 figure = plt.gcf()
@@ -482,7 +482,7 @@ method2_parameters, method2_cpu_usage = getAvgSorted(method2_parameters, method2
 plt.plot(method2_parameters, method2_cpu_usage, label='Method2')
 plt.scatter(method2_parameters, method2_cpu_usage)
 
-plt.xlabel("Number of smaller sections")
+plt.xlabel("Reduction factor")
 plt.title("CPU Usage vs parameter for Method 2")
 plt.ylabel('CPU Usage')
 figure = plt.gcf()
