@@ -1,0 +1,356 @@
+
+Method:	1
+Parameter:	 number of frames skipped = 10
+Time:	12.713 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 9
+Time:	13.2893 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 8
+Time:	13.9023 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 10
+Time:	12.7616 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 9
+Time:	13.6045 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 8
+Time:	13.9943 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 7
+Time:	13.8427 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 6
+Time:	15.2284 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 5
+Time:	17.1417 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 4
+Time:	20.3147 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 3
+Time:	25.5494 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 2
+Time:	37.9048 seconds
+
+Method:	1
+Parameter:	 number of frames skipped = 1
+Time:	73.0119 seconds
+
+Method:	2
+Parameters:	 width divisions = 1 	height division = 1
+Time:	71.4735 seconds
+
+Method:	2
+Parameters:	 width divisions = 1 	height division = 2
+Time:	66.6893 seconds
+
+Method:	2
+Parameters:	 width divisions = 1 	height division = 3
+Time:	61.3893 seconds
+
+Method:	2
+Parameters:	 width divisions = 1 	height division = 4
+Time:	59.4244 seconds
+
+Method:	2
+Parameters:	 width divisions = 1 	height division = 5
+Time:	58.0883 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 1
+Time:	66.2862 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 2
+Time:	61.7758 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 3
+Time:	57.2579 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 4
+Time:	55.4544 seconds
+
+Method:	2
+Parameters:	 width divisions = 2 	height division = 5
+Time:	54.6588 seconds
+
+Method:	2
+Parameters:	 width divisions = 3 	height division = 1
+Time:	62.7267 seconds
+
+Method:	2
+Parameters:	 width divisions = 3 	height division = 2
+Time:	58.9635 seconds
+
+Method:	2
+Parameters:	 width divisions = 3 	height division = 3
+Time:	55.8789 seconds
+
+Method:	2
+Parameters:	 width divisions = 3 	height division = 4
+Time:	56.0916 seconds
+
+Method:	2
+Parameters:	 width divisions = 3 	height division = 5
+Time:	54.7033 seconds
+
+Method:	2
+Parameters:	 width divisions = 4 	height division = 1
+Time:	59.4254 seconds
+
+Method:	2
+Parameters:	 width divisions = 4 	height division = 2
+Time:	56.4884 seconds
+
+Method:	2
+Parameters:	 width divisions = 4 	height division = 3
+Time:	54.8989 seconds
+
+Method:	2
+Parameters:	 width divisions = 4 	height division = 4
+Time:	53.7751 seconds
+
+Method:	2
+Parameters:	 width divisions = 4 	height division = 5
+Time:	55.0621 seconds
+
+Method:	2
+Parameters:	 width divisions = 5 	height division = 1
+Time:	59.9034 seconds
+
+Method:	2
+Parameters:	 width divisions = 5 	height division = 2
+Time:	56.1567 seconds
+
+Method:	2
+Parameters:	 width divisions = 5 	height division = 3
+Time:	54.0072 seconds
+
+Method:	2
+Parameters:	 width divisions = 5 	height division = 4
+Time:	54.1266 seconds
+
+Method:	2
+Parameters:	 width divisions = 5 	height division = 5
+Time:	51.4469 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 1
+Time:	68.6476 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 2
+Time:	124.129 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 3
+Time:	123.18 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 5
+Time:	157.517 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 1
+Time:	46.6336 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 2
+Time:	42.4548 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 3
+Time:	43.2397 seconds
+
+Method:	3
+Parameters:	 width divisions = 1 	height division = 5
+Time:	43.1976 seconds
+
+Method:	3
+Parameters:	 width divisions = 2 	height division = 1
+Time:	45.9286 seconds
+
+Method:	3
+Parameters:	 width divisions = 2 	height division = 2
+Time:	42.6344 seconds
+
+Method:	3
+Parameters:	 width divisions = 2 	height division = 3
+Time:	40.9329 seconds
+
+Method:	3
+Parameters:	 width divisions = 2 	height division = 4
+Time:	40.1922 seconds
+
+Method:	3
+Parameters:	 width divisions = 2 	height division = 5
+Time:	41.2597 seconds
+
+Method:	3
+Parameters:	 width divisions = 3 	height division = 1
+Time:	46.7744 seconds
+
+Method:	3
+Parameters:	 width divisions = 3 	height division = 2
+Time:	52.849 seconds
+
+Method:	3
+Parameters:	 width divisions = 3 	height division = 3
+Time:	43.9299 seconds
+
+Method:	3
+Parameters:	 width divisions = 3 	height division = 4
+Time:	38.7461 seconds
+
+Method:	3
+Parameters:	 width divisions = 3 	height division = 5
+Time:	37.9157 seconds
+
+Method:	3
+Parameters:	 width divisions = 4 	height division = 1
+Time:	38.6178 seconds
+
+Method:	3
+Parameters:	 width divisions = 4 	height division = 2
+Time:	37.933 seconds
+
+Method:	3
+Parameters:	 width divisions = 4 	height division = 3
+Time:	40.6305 seconds
+
+Method:	3
+Parameters:	 width divisions = 4 	height division = 4
+Time:	40.4154 seconds
+
+Method:	3
+Parameters:	 width divisions = 4 	height division = 5
+Time:	39.0881 seconds
+
+Method:	3
+Parameters:	 width divisions = 5 	height division = 1
+Time:	39.7975 seconds
+
+Method:	3
+Parameters:	 width divisions = 5 	height division = 2
+Time:	38.0847 seconds
+
+Method:	3
+Parameters:	 width divisions = 5 	height division = 3
+Time:	37.9459 seconds
+
+Method:	3
+Parameters:	 width divisions = 5 	height division = 4
+Time:	38.5223 seconds
+
+Method:	3
+Parameters:	 width divisions = 5 	height division = 5
+Time:	38.7608 seconds
+
+Method:	4
+Parameter:	 number of threads = 0
+Time:	0.000347292 seconds
+
+Method:	4
+Parameter:	 number of threads = 1
+Time:	73.5912 seconds
+
+Method:	4
+Parameter:	 number of threads = 2
+Time:	76.948 seconds
+
+Method:	4
+Parameter:	 number of threads = 3
+Time:	62.53 seconds
+
+Method:	4
+Parameter:	 number of threads = 4
+Time:	57.6958 seconds
+
+Method:	4
+Parameter:	 number of threads = 5
+Time:	60.5145 seconds
+
+Method:	4
+Parameter:	 number of threads = 6
+Time:	64.0893 seconds
+
+Method:	4
+Parameter:	 number of threads = 7
+Time:	67.7754 seconds
+
+Method:	4
+Parameter:	 number of threads = 8
+Time:	72.7009 seconds
+
+Method:	4
+Parameter:	 number of threads = 9
+Time:	77.7866 seconds
+
+Method:	5
+Parameters:	 width divisions = 1 	height division = 1
+Time:	46.6755 seconds
+
+Method:	5
+Parameters:	 width divisions = 1 	height division = 2
+Time:	47.9136 seconds
+
+Method:	5
+Parameters:	 width divisions = 1 	height division = 3
+Time:	54.3519 seconds
+
+Method:	5
+Parameters:	 width divisions = 1 	height division = 4
+Time:	70.7783 seconds
+
+Method:	5
+Parameters:	 width divisions = 1 	height division = 5
+Time:	83.7097 seconds
+
+Method:	5
+Parameters:	 width divisions = 2 	height division = 1
+Time:	48.5125 seconds
+
+Method:	5
+Parameters:	 width divisions = 2 	height division = 2
+Time:	73.979 seconds
+
+Method:	5
+Parameters:	 width divisions = 2 	height division = 3
+Time:	95.2102 seconds
+
+Method:	5
+Parameters:	 width divisions = 2 	height division = 4
+Time:	124.287 seconds
+
+Method:	5
+Parameters:	 width divisions = 2 	height division = 5
+Time:	177.521 seconds
+
+Method:	5
+Parameters:	 width divisions = 3 	height division = 1
+Time:	55.1022 seconds
+
+Method:	5
+Parameters:	 width divisions = 3 	height division = 2
+Time:	93.6486 seconds
+
+Method:	5
+Parameters:	 width divisions = 3 	height division = 3
+Time:	151.234 seconds

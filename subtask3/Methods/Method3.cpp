@@ -20,7 +20,7 @@ void * spacialThreadWorker(void * arguments){
 
     loc_arg->queue_density = loc_arg->obj.getQueueDensity(crop_img, loc_arg->background_subtracted, back_crop);
     Mat temp = loc_arg->frame;
-    loc_arg->dynamic_density = loc_arg->obj.getDynamicDensity(loc_arg->frame_number, loc_arg->image, temp, loc_arg->prev_frame, loc_arg->dynamicMask, loc_arg->prev);   
+    //loc_arg->dynamic_density = loc_arg->obj.getDynamicDensity(loc_arg->frame_number, loc_arg->image, temp, loc_arg->prev_frame, loc_arg->dynamicMask, loc_arg->prev);
     // cout<<"Thread "<<loc_arg->thread_i<<" x "<<loc_arg->thread_j<<" has worked on a frame now!\n";
     pthread_exit(NULL);
     
@@ -161,8 +161,8 @@ void method3(int argc, char** argv, const int x, const int y, bool toDisplay){
             avg_dynamic += dynamic_densities[j];
             num+=1;
         }
-        cout<<(double)(i+1)/fps<<", "<<avg_queue/num<<", "<<avg_dynamic/num<<'\n';
-        MyFile<<(double)(i+1)/fps<<", "<<avg_queue/num<<", "<<avg_dynamic/num<<'\n';
+        cout<<(double)(i+1)/fps<<", "<<avg_queue/num<<", "<<0.0<<'\n';
+        MyFile<<(double)(i+1)/fps<<", "<<avg_queue/num<<", "<<0.0<<'\n';
     }
 
     MyFile.close();

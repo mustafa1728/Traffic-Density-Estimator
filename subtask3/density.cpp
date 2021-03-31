@@ -37,9 +37,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
         out_file_name = "out.txt";
 
         /// handling command line arguments ///
-        backimgPath = "background.jpg";
+        backimgPath = "/Users/tamajit/Desktop/IIT DELHI/COP290/COP290_task1/subtask3/background.jpg";
         userinput = "0";
-        videoPath = "../../trafficvideo.mp4";
+        videoPath = "/Users/tamajit/Desktop/trafficvideo.mp4";
         if (argc == 1) {
            ;
         }
