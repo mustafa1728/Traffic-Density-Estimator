@@ -386,7 +386,9 @@ void CallBackFunc(int event, int x, int y, int flags, void* pts_src)
 
         while(true)
         {
-            if (!readFrame(cap, frame)){     cout << "The video is over!\n"; break;      }
+            if (!readFrame(cap, frame)){
+                //cout << "The video is over!\n";
+                break;      }
 
             correctCameraAngleAndCrop(frame, cropped_frame);
 

@@ -84,8 +84,7 @@ void method3_beta(int argc, char** argv, const int x, const int y, bool toDispla
     while(true){
         bool bSuccess = cap.read(frame_temp);
         if(!bSuccess){
-            cout << "The video is over!\n";
-            
+           // cout << "The video is over!\n";
             break;
         }
         frame = frame_temp;
@@ -195,7 +194,7 @@ void method3_beta(int argc, char** argv, const int x, const int y, bool toDispla
 
     string out_file_name = "out.txt";
     ofstream MyFile(out_file_name);
-    cout<<"Time of video Queue Density, Dynamic Density\n";
+    cout<<"Time of video, Queue Density, Dynamic Density\n";
     MyFile<<"Time of video, Queue Density, Dynamic Density\n";
     for(int i = 0; i<avg_queue_densities.size(); i++){
         cout<<(double)(i+1)/fps<<", "<<avg_queue_densities[i]<<", 0"<<endl;

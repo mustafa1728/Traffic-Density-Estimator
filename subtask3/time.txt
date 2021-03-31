@@ -153,22 +153,6 @@ Time:	51.4469 seconds
 
 Method:	3
 Parameters:	 width divisions = 1 	height division = 1
-Time:	68.6476 seconds
-
-Method:	3
-Parameters:	 width divisions = 1 	height division = 2
-Time:	124.129 seconds
-
-Method:	3
-Parameters:	 width divisions = 1 	height division = 3
-Time:	123.18 seconds
-
-Method:	3
-Parameters:	 width divisions = 1 	height division = 5
-Time:	157.517 seconds
-
-Method:	3
-Parameters:	 width divisions = 1 	height division = 1
 Time:	46.6336 seconds
 
 Method:	3
