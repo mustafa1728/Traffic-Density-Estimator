@@ -35,8 +35,8 @@ Further improving the latency or throughput of the algorithm using mult-threadin
 
 
 <p align="center">
-  <img src="subtask3/plots/runtime/method1_time.png" width="33%"/>
-  <img src="subtask3/plots/utility/method1_error.png" width="33%"/>
-  <img src="subtask3/plots/tradeoff/method1_tradeoff.png" width="33%"/>
+  <img src="subtask3/plots/runtime/method1_time.png" width="30%"/>
+  <img src="subtask3/plots/utility/method1_error.png" width="30%"/>
+  <img src="subtask3/plots/tradeoff/method1_tradeoff.png" width="30%"/>
   <br> 
 </p>
